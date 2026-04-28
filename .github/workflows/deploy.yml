@@ -67,10 +67,12 @@ jobs:
 
       - name: Deploy Frontend to Cloud Run
         run: |
+          CMS_URL=$(gcloud run services describe ${{ env.CMS_SERVICE }} --region=${{ env.REGION }} --format='value(status.url)')
           gcloud run deploy ${{ env.FRONTEND_SERVICE }} \
             --image=${{ env.AR_REPO }}/ml-frontend:${{ github.sha }} \
             --region=${{ env.REGION }} \
             --project=${{ env.PROJECT_ID }} \
+            --update-env-vars NEXT_PUBLIC_DRUPAL_BASE_URL=$CMS_URL \
             --quiet
 
       - name: Verify Deployments
