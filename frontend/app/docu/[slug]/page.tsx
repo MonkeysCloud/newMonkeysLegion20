@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { notFound } from 'next/navigation';
 import { getDocPage, getDocPages, getDocVersions } from '@/lib/drupal';
 import DocSidebar from '../../components/docs/DocSidebar';

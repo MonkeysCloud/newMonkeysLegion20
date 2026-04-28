@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import MarketplaceClient from './MarketplaceClient';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/Footer';
