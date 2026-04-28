@@ -11,7 +11,7 @@ export const metadata = {
   description: 'MonkeysLegion v2 is a modular PHP 8.4 framework built around attributes, strict types, compiled infrastructure, and 26 integrated packages.',
   openGraph: {
     title: 'Inside MonkeysLegion v2 — A Modern PHP Platform',
-    description: 'Attribute-first architecture, compiled DI, PSR-aligned internals, first-party auth, and AI orchestration — 26 packages in one ecosystem.',
+    description: 'Attribute-first architecture, compiled DI, PSR-aligned internals, first-party auth, and AI orchestration — 28 packages in one ecosystem.',
     url: '/framework',
   },
   twitter: { card: 'summary_large_image' as const },

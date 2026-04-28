@@ -86,7 +86,7 @@ export default function Footer({ menuItems = [] }: FooterProps) {
               margin: 0,
             }}>
               The enterprise PHP framework that ships with everything.
-              26 packages. Zero compromises.
+              28 packages. Zero compromises.
             </p>
 
             {/* SOCIAL ICONS */}
@@ -231,7 +231,7 @@ export default function Footer({ menuItems = [] }: FooterProps) {
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
                 {[
-                  { label: 'Packages', value: '26' },
+                  { label: 'Packages', value: '28' },
                   { label: 'Tests', value: '545' },
                   { label: 'Assertions', value: '1,145' },
                 ].map((stat) => (

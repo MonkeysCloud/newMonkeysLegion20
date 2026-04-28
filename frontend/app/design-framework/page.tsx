@@ -72,7 +72,7 @@ const architectureTree = `my-app/
 └─ bin/`;
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Section 3 — Package Ecosystem (7 categories, 26 packages)
+   Section 3 — Package Ecosystem (7 categories, 28 packages)
    ═══════════════════════════════════════════════════════════════════════════ */
 
 const packageGroups = [
@@ -206,7 +206,7 @@ function FrameworkPageInner({ menuItems }: { menuItems: MenuItem[] }) {
       <main>
         {/* ── Hero ── */}
         <PageHero
-          eyebrow="monkeyslegion@2.0 · PHP 8.4+ · 26 packages"
+          eyebrow="monkeyslegion@2.0 · PHP 8.4+ · 28 packages"
           title="A Modern PHP Platform."
           titleGradient="Not Just a Framework."
           subtitle="Attribute-first architecture, compiled infrastructure, PSR-aligned internals, first-party auth & security, and a unique AI orchestration engine — all delivered through a modular 26-package ecosystem."
@@ -337,7 +337,7 @@ function FrameworkPageInner({ menuItems }: { menuItems: MenuItem[] }) {
                 </div>
 
                 <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
-                  <a href="/packages" className="btn btn-primary btn-lg">Explore all 26 packages →</a>
+                  <a href="/packages" className="btn btn-primary btn-lg">Explore all 28 packages →</a>
                 </div>
               </div>
             </AnimatedSection>

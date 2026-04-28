@@ -38,7 +38,7 @@ export const fallbackHero: HeroData = {
     'PSR-7 / 11 / 14 / 15 / 16 / 17',
     '182 tests / 440 assertions',
     'MIT licensed',
-    '26 packages',
+    '28 packages',
     '🤖 AI Orchestration Engine',
   ],
   terminalCommands: [
@@ -70,7 +70,7 @@ export const fallbackWhatsNewTiles: FeatureTileData[] = [
 export const fallbackPillars: PillarData[] = [
   { icon: '⚡', title: 'Fast', subtitle: 'Measured in millions of ops per second.', description: "Zero-magic architecture means entities, DTOs, and enums are plain PHP objects. No Doctrine proxies, no Eloquent __get() chains, no framework metaclass layer." },
   { icon: '🔐', title: 'Secure', subtitle: 'Defaults that would take weeks to bolt on elsewhere.', description: 'Argon2id password hashing, built-in TOTP 2FA, JWT with rotation and blacklisting, rate limiting per route, OWASP headers middleware, CSRF, trusted-proxy awareness, and maintenance mode with IP/secret bypass.' },
-  { icon: '🧩', title: 'Modular', subtitle: '26 packages. Use all of them, or use two.', description: "Every capability lives in its own Composer package with its own semver. The meta-package wires them together, but you can swap any of them for your own implementation via the PSR contract." },
+  { icon: '🧩', title: 'Modular', subtitle: '28 packages. Use all of them, or use two.', description: "Every capability lives in its own Composer package with its own semver. The meta-package wires them together, but you can swap any of them for your own implementation via the PSR contract." },
 ];
 
 /* ============================================================================
@@ -199,7 +199,7 @@ export const fallbackAudienceTiles: FeatureTileData[] = [
   { id: 'au2', icon: '🚀', title: 'API-first startups', description: 'Attribute routing + DTO validation + OpenAPI auto-gen + JWT = full REST API in a day.', sortOrder: 1, sectionGroup: 'audience' },
   { id: 'au3', icon: '⚡', title: 'High-throughput services', description: '6× the HTTP req/s of Laravel at 18% the boot memory — measurable infrastructure savings at scale.', sortOrder: 2, sectionGroup: 'audience' },
   { id: 'au4', icon: '🔒', title: 'Enterprise / compliance', description: 'Argon2id, OWASP headers, token blacklisting, PII redaction guardrails, trusted-proxy middleware — all first-party.', sortOrder: 3, sectionGroup: 'audience' },
-  { id: 'au5', icon: '💎', title: 'Modern PHP shops', description: 'PHP 8.4 property hooks, strict types across all 26 packages, attribute-first everything — no more legacy __get() magic.', sortOrder: 4, sectionGroup: 'audience' },
+  { id: 'au5', icon: '💎', title: 'Modern PHP shops', description: 'PHP 8.4 property hooks, strict types across all 28 packages, attribute-first everything — no more legacy __get() magic.', sortOrder: 4, sectionGroup: 'audience' },
 ];
 
 /* ============================================================================

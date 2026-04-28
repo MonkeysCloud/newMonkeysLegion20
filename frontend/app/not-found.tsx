@@ -8,7 +8,7 @@ const funnyMessages = [
   "Even PHP 8.4 property hooks can't find this route.",
   "This page went on a banana break and never came back.",
   "404: Page lost in space. Send bananas.",
-  "Our monkey checked all 26 packages. No page found.",
+  "Our monkey checked all 28 packages. No page found.",
   "Looks like this route wasn't attribute-discovered.",
 ];
 
