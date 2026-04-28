@@ -8,7 +8,6 @@ nginx &
 DB_HOST="${DRUPAL_DB_HOST}"
 if [[ "$DB_HOST" == /cloudsql/* ]]; then
     echo "→ Using Cloud SQL Unix socket: $DB_HOST"
-    # For Unix socket, we test connection differently
     MAX_TRIES=30
     COUNT=0
     until php -r "
@@ -53,14 +52,25 @@ fi
 
 cd /var/www/html
 
-# Run pending DB updates + cache rebuild (with timeout so it doesn't hang container startup)
-echo "→ Running DB updates..."
-timeout 30s vendor/bin/drush updatedb -y || echo "→ Drush updatedb failed or timed out"
-echo "→ Rebuilding cache..."
-timeout 30s vendor/bin/drush cr || echo "→ Drush cr failed or timed out"
-
 # Fix permissions
 chown -R www-data:www-data /var/www/html/web/sites/default/files 2>/dev/null || true
 
+# Start PHP-FPM in the background FIRST so the container can serve traffic immediately
 echo "→ Starting PHP-FPM..."
-exec php-fpm
+php-fpm &
+FPM_PID=$!
+
+# Give FPM a moment to bind to port 9000
+sleep 2
+
+# Run drush in the background so it doesn't block the container
+(
+    echo "→ Running DB updates..."
+    timeout 60s vendor/bin/drush updatedb -y 2>&1 || echo "→ Drush updatedb failed or timed out"
+    echo "→ Rebuilding cache..."
+    timeout 60s vendor/bin/drush cr 2>&1 || echo "→ Drush cr failed or timed out"
+    echo "→ Drush tasks complete."
+) &
+
+# Wait for PHP-FPM (the main process) — if it dies, the container exits
+wait $FPM_PID
