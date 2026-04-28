@@ -5,11 +5,11 @@ import DocSidebar from '../../components/docs/DocSidebar';
 export async function generateMetadata({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ v?: string }> }) {
   const { slug } = await params;
   const { v } = await searchParams;
-  const page = await getDocPage(slug, v || '2.0');
-  if (!page) return { title: 'Not Found — MonkeysLegion Docs' };
+  const result = await getDocPage(slug, v || '2.0');
+  if (!result) return { title: 'Not Found — MonkeysLegion Docs' };
   return {
-    title: `${page.title} — MonkeysLegion Docs`,
-    description: `Documentation for ${page.title} in MonkeysLegion v${page.version}`,
+    title: `${result.doc.title} — MonkeysLegion Docs`,
+    description: `Documentation for ${result.doc.title} in MonkeysLegion v${result.doc.version}`,
   };
 }
 
@@ -18,13 +18,14 @@ export default async function DocuSlugPage({ params, searchParams }: { params: P
   const { v } = await searchParams;
   const version = v || '2.0';
 
-  const [page, allPages, versions] = await Promise.all([
+  const [result, allPages, versions] = await Promise.all([
     getDocPage(slug, version),
     getDocPages(version),
     getDocVersions(),
   ]);
 
-  if (!page) notFound();
+  if (!result) notFound();
+  const page = result.doc;
 
   // Find prev/next for navigation
   const currentIndex = allPages.findIndex(p => p.slug === slug);

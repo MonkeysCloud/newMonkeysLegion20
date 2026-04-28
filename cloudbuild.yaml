@@ -1,0 +1,7 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-f', 'docker/drupal/Dockerfile.prod', '-t', 'us-central1-docker.pkg.dev/monkeyslegion/monkeyslegion/ml-cms:latest', '.']
+images:
+  - 'us-central1-docker.pkg.dev/monkeyslegion/monkeyslegion/ml-cms:latest'
+options:
+  machineType: 'E2_HIGHCPU_8'

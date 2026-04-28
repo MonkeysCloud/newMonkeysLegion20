@@ -7,17 +7,28 @@
  * Docker-aware configuration reading from environment variables.
  */
 
-// Database connection via environment variables (Docker).
+// Database connection via environment variables (Docker / Cloud SQL).
+$db_host = getenv('DRUPAL_DB_HOST') ?: 'mysql';
 $databases['default']['default'] = [
   'database' => getenv('DRUPAL_DB_NAME') ?: 'drupal',
   'username' => getenv('DRUPAL_DB_USER') ?: 'drupal',
   'password' => getenv('DRUPAL_DB_PASSWORD') ?: '',
-  'host' => getenv('DRUPAL_DB_HOST') ?: 'mysql',
-  'port' => getenv('DRUPAL_DB_PORT') ?: '3306',
   'driver' => 'mysql',
   'prefix' => '',
   'collation' => 'utf8mb4_general_ci',
 ];
+
+// Cloud SQL uses Unix socket; local Docker uses TCP host.
+if (str_starts_with($db_host, '/cloudsql/')) {
+  $databases['default']['default']['host'] = 'localhost';
+  $databases['default']['default']['pdo'] = [
+    \PDO::MYSQL_ATTR_SSL_CA => '',
+  ];
+  $databases['default']['default']['unix_socket'] = $db_host;
+} else {
+  $databases['default']['default']['host'] = $db_host;
+  $databases['default']['default']['port'] = getenv('DRUPAL_DB_PORT') ?: '3306';
+}
 
 // Hash salt — MUST be set in production.
 $settings['hash_salt'] = getenv('DRUPAL_HASH_SALT') ?: 'change-me-to-a-random-string';
@@ -36,6 +47,8 @@ $settings['trusted_host_patterns'] = [
   '^monkeyslegion\.com$',
   '^cms\.monkeyslegion\.com$',
   '^www\.monkeyslegion\.com$',
+  '^ml-cms-.+\.run\.app$',
+  '^ml-frontend-.+\.run\.app$',
 ];
 
 // File system paths.
@@ -61,8 +74,15 @@ $settings['cors.config'] = [
     'access-control-allow-origin',
   ],
   'allowedMethods' => ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-  'allowedOrigins' => ['http://localhost:3000', 'http://localhost', 'http://cms.localhost'],
-  'allowedOriginsPatterns' => ['/localhost:\d+/'],
+  'allowedOrigins' => [
+    'http://localhost:3000',
+    'http://localhost',
+    'http://cms.localhost',
+    'https://monkeyslegion.com',
+    'https://cms.monkeyslegion.com',
+    'https://www.monkeyslegion.com',
+  ],
+  'allowedOriginsPatterns' => ['/localhost:\d+/', '/\.run\.app$/'],
   'exposedHeaders' => TRUE,
   'maxAge' => 1000,
   'supportsCredentials' => TRUE,
