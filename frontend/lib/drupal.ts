@@ -40,7 +40,7 @@ function resolveBodyHtml(body: any): string {
   return processed || raw;
 }
 
-const DRUPAL_BASE_URL = process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'http://nginx';
+const DRUPAL_BASE_URL = process.env.DRUPAL_BASE_URL || process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'http://nginx';
 
 /* ============================================================================
    Core fetch helper
@@ -90,9 +90,8 @@ function toNodeArray(data: JsonApiResponse | null): DrupalNode[] {
    ============================================================================ */
 
 export async function getCanvasLayout(path: string): Promise<CanvasLayout | null> {
-  // Use relative proxy path so Nginx routes to backend
   try {
-    const url = `http://nginx/api/canvas-layout-by-path?path=${encodeURIComponent(path)}`;
+    const url = `${DRUPAL_BASE_URL}/api/canvas-layout-by-path?path=${encodeURIComponent(path)}`;
     const response = await fetch(url, {
       headers: { Accept: 'application/json' },
       next: { revalidate: 60 },

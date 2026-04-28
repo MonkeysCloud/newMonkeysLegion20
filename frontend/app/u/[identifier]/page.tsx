@@ -12,7 +12,7 @@ interface Props {
 }
 
 async function getProfile(identifier: string) {
-  const DRUPAL_BASE = process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'http://nginx';
+  const DRUPAL_BASE = process.env.DRUPAL_BASE_URL || process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'http://nginx';
   try {
     const res = await fetch(`${DRUPAL_BASE}/api/profile/${identifier}`, {
       headers: { Accept: 'application/json' },

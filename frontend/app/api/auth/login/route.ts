@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const DRUPAL_BASE = process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'http://nginx';
+const DRUPAL_BASE = process.env.DRUPAL_BASE_URL || process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'http://nginx';
 const CLIENT_ID = process.env.DRUPAL_CLIENT_ID || 'monkeyslegion-nextjs';
 const CLIENT_SECRET = process.env.DRUPAL_CLIENT_SECRET || '';
 

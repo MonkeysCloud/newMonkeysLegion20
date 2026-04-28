@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/jsonapi/:path*',
-        destination: `${process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'http://nginx'}/jsonapi/:path*`,
+        destination: `${process.env.DRUPAL_BASE_URL || process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'http://nginx'}/jsonapi/:path*`,
       },
     ];
   },
