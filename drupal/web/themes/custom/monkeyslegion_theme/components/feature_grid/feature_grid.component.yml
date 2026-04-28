@@ -1,0 +1,20 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Feature Grid
+description: Renders a grid of feature tiles fetched from Drupal. Used for What's New, Features at a Glance, Apex tiles, and Audience sections.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+    subtitle:
+      type: string
+      title: Section Subtitle
+    background_alt:
+      type: boolean
+      title: Alternate Background
+      default: false
+slots:
+  items:
+    title: Feature Cards

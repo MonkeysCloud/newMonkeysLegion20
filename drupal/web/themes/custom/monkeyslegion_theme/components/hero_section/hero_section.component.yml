@@ -1,0 +1,27 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Hero Section
+description: Full-width hero section with headline, subtitle, and CTAs.
+status: experimental
+slots:
+  actions:
+    title: Action Buttons
+    description: Drop button components here
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Main Headline
+      default: 'The attribute-first PHP framework built for PHP 8.4.'
+    subtitle:
+      type: string
+      title: Subtitle Text
+      default: 'Zero-config DI, native property hooks, built-in AI orchestration.'
+    version_badge:
+      type: string
+      title: Version Badge
+      default: 'v2.0 — Available now'
+    badges:
+      type: string
+      title: Feature Badges (comma separated)
+      default: 'PHP 8.4 Native,Apex AI Integrated,No Magic'

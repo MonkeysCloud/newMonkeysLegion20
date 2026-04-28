@@ -1,0 +1,17 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: CTA Button
+description: A call-to-action button with label, URL, and style variant.
+status: experimental
+props:
+  type: object
+  properties:
+    label:
+      type: string
+      title: Button Label
+    url:
+      type: string
+      title: URL
+    variant:
+      type: string
+      title: 'Style Variant (primary or secondary)'
+      default: 'primary'

@@ -1,0 +1,10 @@
+{# Canvas SDC: feature_grid — rendered by Next.js frontend #}
+<div data-component="feature_grid" style="padding-bottom: 4rem; min-height: 150px; border: 2px solid #ccc; margin: 1rem; padding: 1rem;">
+  <h2>{{ title|default('Feature Grid') }}</h2>
+  <div style="border: 2px dashed #999; padding: 1rem; margin-top: 1rem;">
+    <h3>Items Slot</h3>
+    {% block items %}
+      <p style="color: #666;">Drag Feature Cards here.</p>
+    {% endblock %}
+  </div>
+</div>

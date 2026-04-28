@@ -1,0 +1,19 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Quick Start
+description: Three-step install guide with requirements table.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'Quick Start'
+    subtitle:
+      type: string
+      title: Section Subtitle
+slots:
+  steps:
+    title: Quick Start Steps
+  requirements:
+    title: Requirements

@@ -1,0 +1,15 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Memory Row
+description: Single memory strategy row with strategy name and use case.
+status: experimental
+props:
+  type: object
+  properties:
+    strategy:
+      type: string
+      title: Strategy Name
+      default: 'ConversationMemory'
+    use_case:
+      type: string
+      title: Use Case
+      default: 'Full transcript, unbounded'

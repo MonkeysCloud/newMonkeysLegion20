@@ -1,0 +1,17 @@
+{# Canvas SDC: pillars — rendered by Next.js frontend #}
+<div data-component="pillars" style="padding: 3rem 2rem; background: #0b0d10; color: white; text-align: center; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2);">
+  <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 1rem;">{{ title|default('Three promises. Kept by design.') }}</h2>
+  <div style="margin-top: 2rem; border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px;">
+    {% block items %}
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; min-height: 150px; padding: 2rem; padding-bottom: 4rem;">
+        {% if items %}
+          {{ items }}
+        {% else %}
+          <div style="opacity: 0.5; font-size: 0.85rem; font-style: italic; align-self: center; width: 100%; text-align: center;">
+            Drag pillar_card components here...
+          </div>
+        {% endif %}
+      </div>
+    {% endblock %}
+  </div>
+</div>

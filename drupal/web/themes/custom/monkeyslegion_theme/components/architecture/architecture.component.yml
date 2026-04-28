@@ -1,0 +1,14 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Architecture Diagram
+description: Request pipeline and boot sequence diagrams.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'Under the Hood'
+    subtitle:
+      type: string
+      title: Section Subtitle

@@ -1,0 +1,21 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Security Matrix
+description: Feature-by-feature security comparison table between MonkeysLegion, Laravel, and Symfony.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'Secure by default'
+    subtitle:
+      type: string
+      title: Section Subtitle
+    footer_text:
+      type: string
+      title: Footer Callout Text
+      pattern: '(.|\r?\n)*'
+slots:
+  rows:
+    title: Security Rows

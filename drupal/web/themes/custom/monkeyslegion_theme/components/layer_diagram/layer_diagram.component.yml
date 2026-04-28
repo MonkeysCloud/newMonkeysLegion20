@@ -1,0 +1,23 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Layer Diagram
+description: Concentric architecture layer diagram for Apex.
+status: experimental
+slots:
+  layers:
+    title: Layer Rows
+    description: Drop layer_row components here
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'Architecture'
+    title_gradient:
+      type: string
+      title: Gradient Text
+      default: 'layers.'
+    subtitle:
+      type: string
+      title: Subtitle
+      default: 'Concentric rings — each layer is useful on its own.'

@@ -1,0 +1,12 @@
+{# Canvas SDC: quick_start_step — rendered by Next.js frontend #}
+<div data-component="quick_start_step" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 1.25rem; min-height: 100px;">
+  <div style="font-size: 1.8rem; font-weight: 900; color: #3b82f6; opacity: 0.4; font-family: 'JetBrains Mono', monospace; line-height: 1;">{{ num|default('01') }}</div>
+  <h3 style="font-size: 1rem; font-weight: 700; color: white; margin: 0.5rem 0 0.75rem 0;">{{ title|default('Step Title') }}</h3>
+  <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+    {% for cmd in commands|default('')|split('\n') %}
+      {% if cmd|trim %}
+        <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: {{ cmd|trim|slice(0,1) == '#' ? '#6b7280' : '#10b981' }}; padding: 0.3rem 0.6rem; background: rgba(0,0,0,0.4); border-radius: 4px; display: block;">{{ cmd|trim }}</code>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>

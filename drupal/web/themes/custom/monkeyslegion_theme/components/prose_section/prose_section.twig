@@ -1,0 +1,16 @@
+{# Prose Section — Canvas admin preview #}
+<div data-component="prose_section" style="padding: 3rem 2rem; background: {{ background == 'alt' ? '#131620' : '#0e1117' }}; color: white; text-align: center; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.15);">
+  <div style="max-width: {{ max_width|default(800) }}px; margin: 0 auto;">
+    {% if title %}
+      <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 1rem;">
+        {{ title }}
+        {% if title_gradient %}
+          <span style="background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ title_gradient }}</span>
+        {% endif %}
+      </h2>
+    {% endif %}
+    {% if body %}
+      <p style="color: #9ca3af; line-height: 1.7; font-size: 0.95rem;">{{ body }}</p>
+    {% endif %}
+  </div>
+</div>

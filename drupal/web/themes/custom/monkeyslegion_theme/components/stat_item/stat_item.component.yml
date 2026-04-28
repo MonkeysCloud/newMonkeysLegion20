@@ -1,0 +1,19 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Stat Item
+description: A single statistic badge with a label and a large value.
+status: experimental
+props:
+  type: object
+  properties:
+    label:
+      type: string
+      title: Label
+      default: 'Packages'
+      examples:
+        - 'Packages'
+    value:
+      type: string
+      title: Value
+      default: '26'
+      examples:
+        - '26'

@@ -1,0 +1,23 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Capability Grid
+description: Grid of capability cards with section title and subtitle.
+status: experimental
+slots:
+  cards:
+    title: Capability Cards
+    description: Drop capability_card components here
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'Fifteen capabilities.'
+    title_gradient:
+      type: string
+      title: Gradient Text
+      default: 'One package.'
+    subtitle:
+      type: string
+      title: Section Subtitle
+      default: 'Everything an AI-native PHP application needs.'

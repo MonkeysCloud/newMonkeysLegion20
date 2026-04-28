@@ -1,0 +1,22 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Apex Comparison Row
+description: A table row component for the Apex Spotlight's cross-ecosystem comparison table.
+status: experimental
+props:
+  type: object
+  properties:
+    capability:
+      type: string
+      title: Capability
+    apex:
+      type: string
+      title: Apex Status
+    python:
+      type: string
+      title: Python
+    node:
+      type: string
+      title: Node.js
+    laravel:
+      type: string
+      title: Laravel

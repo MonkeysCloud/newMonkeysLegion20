@@ -1,0 +1,22 @@
+{# Canvas SDC: apex_spotlight — rendered by Next.js frontend #}
+<div data-component="apex_spotlight" style="padding-bottom: 4rem; min-height: 150px; background: rgba(0,0,0,0.2);">
+  <h2 style="color: white; padding: 1rem;">Apex Spotlight: {{ title|default('New Setup') }}</h2>
+  <div style="border: 2px dashed #999; padding: 1rem; margin: 1rem;">
+    <h3>Main Tiles Slot</h3>
+    {% block main_tiles %}
+      <p style="color: #666;">Drag main apex tiles here.</p>
+    {% endblock %}
+  </div>
+  <div style="border: 2px dashed #999; padding: 1rem; margin: 1rem;">
+    <h3>Secondary Tiles Slot</h3>
+    {% block secondary_tiles %}
+      <p style="color: #666;">Drag secondary apex tiles here.</p>
+    {% endblock %}
+  </div>
+  <div style="border: 2px dashed #999; padding: 1rem; margin: 1rem;">
+    <h3>Comparison Rows Slot</h3>
+    {% block comparison_rows %}
+      <p style="color: #666;">Drag comparison rows here.</p>
+    {% endblock %}
+  </div>
+</div>

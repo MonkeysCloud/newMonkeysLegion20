@@ -1,0 +1,44 @@
+ml_canvas_api.layout:
+  path: '/api/canvas-layout/{page_id}'
+  defaults:
+    _controller: '\Drupal\ml_canvas_api\Controller\CanvasLayoutController::getLayout'
+  requirements:
+    _access: 'TRUE'
+    page_id: '\d+'
+  methods: [GET]
+  options:
+    _format: 'json'
+    no_cache: TRUE
+
+ml_canvas_api.layout_by_path:
+  path: '/api/canvas-layout-by-path'
+  defaults:
+    _controller: '\Drupal\ml_canvas_api\Controller\CanvasLayoutController::getLayoutByPath'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+  options:
+    _format: 'json'
+    no_cache: TRUE
+
+ml_canvas_api.pages:
+  path: '/api/canvas-pages'
+  defaults:
+    _controller: '\Drupal\ml_canvas_api\Controller\CanvasLayoutController::listPages'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+  options:
+    _format: 'json'
+    no_cache: TRUE
+
+ml_canvas_api.menu:
+  path: '/api/menu/{menu_name}'
+  defaults:
+    _controller: '\Drupal\ml_canvas_api\Controller\CanvasLayoutController::getMenu'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+  options:
+    _format: 'json'
+    no_cache: TRUE

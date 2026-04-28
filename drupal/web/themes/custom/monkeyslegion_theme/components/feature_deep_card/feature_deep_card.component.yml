@@ -1,0 +1,45 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Feature Deep Card
+description: Feature card with icon, title, version tag, description, and code snippet.
+status: experimental
+props:
+  type: object
+  properties:
+    icon:
+      type: string
+      title: Emoji Icon
+      default: '🧭'
+      examples:
+        - '🧭'
+    title:
+      type: string
+      title: Feature Title
+      default: 'Attribute Routing'
+      examples:
+        - 'Attribute Routing'
+    tag:
+      type: string
+      title: Version Tag
+      default: 'monkeyslegion-router@2.1'
+      examples:
+        - 'monkeyslegion-router@2.1'
+    description:
+      type: string
+      title: Description
+      pattern: '(.|\r?\n)*'
+      default: 'Define routes where your handlers live.'
+      examples:
+        - 'Define routes where your handlers live.'
+    code:
+      type: string
+      title: Code Snippet
+      pattern: '(.|\r?\n)*'
+      default: "// Your code here"
+      examples:
+        - "// Your code here"
+    language:
+      type: string
+      title: Code Language
+      default: 'php'
+      examples:
+        - 'php'

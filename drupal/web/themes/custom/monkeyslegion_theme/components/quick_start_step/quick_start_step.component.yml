@@ -1,0 +1,19 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Quick Start Step
+description: A numbered step card with terminal commands for the Quick Start section.
+status: experimental
+props:
+  type: object
+  properties:
+    num:
+      type: string
+      title: Step Number
+      default: '01'
+    title:
+      type: string
+      title: Step Title
+    commands:
+      type: string
+      title: Commands
+      description: 'One command per line.'
+      pattern: '(.|\r?\n)*'

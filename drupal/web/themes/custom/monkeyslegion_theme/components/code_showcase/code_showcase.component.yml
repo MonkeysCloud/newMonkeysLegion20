@@ -1,0 +1,16 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Code Showcase
+description: Tabbed code examples.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+    subtitle:
+      type: string
+      title: Section Subtitle
+slots:
+  tabs:
+    title: Code Tabs

@@ -1,0 +1,14 @@
+{# Philosophy Cards — Canvas admin preview #}
+<div data-component="philosophy_cards" style="padding: 3rem 2rem; background: #0e1117; color: white; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.15);">
+  <h2 style="font-size: 2rem; font-weight: 800; text-align: center; margin-bottom: 2rem;">{{ title|default('A note on') }} <span style="background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ title_gradient|default('philosophy.') }}</span></h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 800px; margin: 0 auto;">
+    <div style="padding: 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;">
+      <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.75rem; color: {{ framework_1_color|default('#18b2e0') }};">{{ framework_1_name|default("Symfony's philosophy") }}</h4>
+      <p style="font-size: 0.8rem; color: #9ca3af; line-height: 1.6; margin: 0;"><strong style="color: white;">{{ framework_1_tagline }}</strong> {{ framework_1_body }}</p>
+    </div>
+    <div style="padding: 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;">
+      <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.75rem; color: {{ framework_2_color|default('#8b5cf6') }};">{{ framework_2_name|default("MonkeysLegion's philosophy") }}</h4>
+      <p style="font-size: 0.8rem; color: #9ca3af; line-height: 1.6; margin: 0;"><strong style="color: white;">{{ framework_2_tagline }}</strong> {{ framework_2_body }}</p>
+    </div>
+  </div>
+</div>

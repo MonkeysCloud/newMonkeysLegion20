@@ -1,0 +1,17 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Packages Table
+description: Table listing all framework packages with versions, descriptions, and GitHub links.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'The ecosystem.'
+    subtitle:
+      type: string
+      title: Section Subtitle
+slots:
+  rows:
+    title: Package Rows

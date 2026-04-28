@@ -1,0 +1,12 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Stats Bar
+description: Horizontal statistics bar with key metrics.
+status: experimental
+props:
+  type: object
+  properties:
+    stats:
+      type: string
+      title: Stats (pipe-separated, label:value format)
+      description: 'e.g. Packages:26+|PHP Minimum:8.4|License:MIT'
+      default: 'Packages:26+|PHP Minimum:8.4|PSR Interfaces:7, 11, 14, 15, 16, 17|License:MIT'

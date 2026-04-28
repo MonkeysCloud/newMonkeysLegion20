@@ -1,0 +1,26 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Framework Trait
+description: A core trait card with icon, title, and description for the framework overview.
+status: experimental
+props:
+  type: object
+  properties:
+    icon:
+      type: string
+      title: Emoji Icon
+      default: '⚡'
+      examples:
+        - '⚡'
+    title:
+      type: string
+      title: Trait Title
+      default: 'PHP 8.4 Baseline'
+      examples:
+        - 'PHP 8.4 Baseline'
+    description:
+      type: string
+      title: Description
+      pattern: '(.|\r?\n)*'
+      default: 'Property hooks and strict typing are first-class design inputs.'
+      examples:
+        - 'Property hooks and strict typing are first-class design inputs.'

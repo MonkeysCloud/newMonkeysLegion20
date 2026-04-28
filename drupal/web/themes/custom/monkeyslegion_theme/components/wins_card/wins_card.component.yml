@@ -1,0 +1,22 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Wins Card
+description: Single advantage card with icon, title, and description.
+status: experimental
+props:
+  type: object
+  properties:
+    icon:
+      type: string
+      title: Emoji Icon
+      default: '📦'
+    title:
+      type: string
+      title: Advantage Title
+      default: 'Ecosystem depth'
+    description:
+      type: string
+      title: Description
+    accent_color:
+      type: string
+      title: Border Accent Color
+      default: '#ff4444'

@@ -1,0 +1,16 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Whats New Section
+description: whats_new section component.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+    description:
+      type: string
+      title: Section Description
+slots:
+  cards:
+    title: Feature Cards Dropzone

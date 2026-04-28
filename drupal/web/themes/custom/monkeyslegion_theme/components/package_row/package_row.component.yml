@@ -1,0 +1,19 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Package Row
+description: A table row component for the packages table.
+status: experimental
+props:
+  type: object
+  properties:
+    package_name:
+      type: string
+      title: Package Name
+    version:
+      type: string
+      title: Version
+    purpose:
+      type: string
+      title: Purpose
+    github_url:
+      type: string
+      title: GitHub URL

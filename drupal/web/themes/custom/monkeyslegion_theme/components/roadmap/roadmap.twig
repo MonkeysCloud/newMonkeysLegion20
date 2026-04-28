@@ -1,0 +1,63 @@
+{# Canvas SDC: roadmap — rendered by Next.js frontend #}
+<div data-component="roadmap" style="padding: 3rem 2rem; background: #0b0d10; color: white; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2);">
+  <h2 style="font-size: 2.2rem; font-weight: 800; text-align: center; margin-bottom: 2rem;">{{ title|default("Where we're") }} <span style="background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">{{ title_gradient|default('going.') }}</span></h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
+    {# Shipped #}
+    <div>
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+        <span style="font-size: 1.3rem;">✅</span>
+        <span style="background: #10b981; color: white; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; text-transform: uppercase;">Shipped in v2.0</span>
+      </div>
+      {% block shipped %}
+        <div style="display: flex; flex-direction: column; gap: 0.4rem; min-height: 120px; padding: 0.75rem; background: rgba(255,255,255,0.02); border: 2px dashed rgba(16,185,129,0.3); border-radius: 8px;">
+          {% if shipped %}
+            {{ shipped }}
+          {% else %}
+            <div style="display: flex; align-items: center; justify-content: center; color: #4b5563; font-size: 0.8rem; font-style: italic; padding: 2rem 0;">
+              ＋ Drop Roadmap Item here…
+            </div>
+          {% endif %}
+        </div>
+      {% endblock %}
+    </div>
+
+    {# Coming #}
+    <div>
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+        <span style="font-size: 1.3rem;">🔜</span>
+        <span style="background: #f59e0b; color: white; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; text-transform: uppercase;">Coming in v2.1</span>
+      </div>
+      {% block coming %}
+        <div style="display: flex; flex-direction: column; gap: 0.4rem; min-height: 120px; padding: 0.75rem; background: rgba(255,255,255,0.02); border: 2px dashed rgba(245,158,11,0.3); border-radius: 8px;">
+          {% if coming %}
+            {{ coming }}
+          {% else %}
+            <div style="display: flex; align-items: center; justify-content: center; color: #4b5563; font-size: 0.8rem; font-style: italic; padding: 2rem 0;">
+              ＋ Drop Roadmap Item here…
+            </div>
+          {% endif %}
+        </div>
+      {% endblock %}
+    </div>
+
+    {# Vision #}
+    <div>
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+        <span style="font-size: 1.3rem;">🔮</span>
+        <span style="background: #8b5cf6; color: white; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; text-transform: uppercase;">v3.0 Vision</span>
+      </div>
+      {% block vision %}
+        <div style="display: flex; flex-direction: column; gap: 0.4rem; min-height: 120px; padding: 0.75rem; background: rgba(255,255,255,0.02); border: 2px dashed rgba(139,92,246,0.3); border-radius: 8px;">
+          {% if vision %}
+            {{ vision }}
+          {% else %}
+            <div style="display: flex; align-items: center; justify-content: center; color: #4b5563; font-size: 0.8rem; font-style: italic; padding: 2rem 0;">
+              ＋ Drop Roadmap Item here…
+            </div>
+          {% endif %}
+        </div>
+      {% endblock %}
+    </div>
+  </div>
+</div>

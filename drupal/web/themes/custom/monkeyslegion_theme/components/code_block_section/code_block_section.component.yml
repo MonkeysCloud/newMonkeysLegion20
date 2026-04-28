@@ -1,0 +1,22 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Code Block Section
+description: Syntax-highlighted code block with language tag and optional header.
+status: experimental
+props:
+  type: object
+  properties:
+    language:
+      type: string
+      title: Language
+      default: 'php'
+    header:
+      type: string
+      title: Header Label
+      description: Optional label above the code block
+    code:
+      type: string
+      title: Code Content
+      pattern: '(.|\r?\n)*'
+      default: '// Your code here'
+      examples:
+        - '// Your code here'

@@ -1,0 +1,39 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Package Highlight
+description: Compact package row with icon, name, and short description.
+status: experimental
+props:
+  type: object
+  properties:
+    icon:
+      type: string
+      title: Emoji Icon
+      default: '📦'
+      examples:
+        - '📦'
+    name:
+      type: string
+      title: Package Name
+      default: 'monkeyslegion-core'
+      examples:
+        - 'monkeyslegion-core'
+    description:
+      type: string
+      title: Short Description
+      default: 'Shared utilities, collections, and base contracts.'
+      examples:
+        - 'Shared utilities, collections, and base contracts.'
+    color:
+      type: string
+      title: Accent Color
+      default: '#8b5cf6'
+      examples:
+        - '#8b5cf6'
+    variant:
+      type: string
+      title: Display Variant
+      default: 'horizontal'
+      description: 'Choose "horizontal" for compact row, or "vertical" for large card.'
+      examples:
+        - 'horizontal'
+        - 'vertical'

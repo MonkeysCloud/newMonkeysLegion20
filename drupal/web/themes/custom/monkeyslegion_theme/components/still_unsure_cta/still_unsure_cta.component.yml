@@ -1,0 +1,27 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Still Unsure CTA
+description: Bottom call-to-action for comparison pages with persuasion text, terminal install command, and action buttons.
+status: experimental
+slots:
+  actions:
+    title: Action Buttons
+    description: Drop button components here
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Title
+      default: 'Still'
+    title_gradient:
+      type: string
+      title: Gradient Text
+      default: 'unsure?'
+    body:
+      type: string
+      title: Body Text
+      default: 'Both frameworks can power enterprise projects.'
+    terminal_command:
+      type: string
+      title: Terminal Command
+      default: 'composer create-project monkeyscloud/monkeyslegion-skeleton my-app'

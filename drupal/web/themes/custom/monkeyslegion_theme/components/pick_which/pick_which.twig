@@ -1,0 +1,26 @@
+{# Pick Which — Canvas admin preview #}
+<div data-component="pick_which" style="padding: 3rem 2rem; background: #131620; color: white; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.15);">
+  <h2 style="font-size: 2rem; font-weight: 800; text-align: center; margin-bottom: 2rem;">{{ title|default('When to pick') }} <span style="background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ title_gradient|default('which.') }}</span></h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 800px; margin: 0 auto;">
+    <div style="padding: 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; border-top: 3px solid {{ framework_1_color|default('#ff4444') }};">
+      <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: {{ framework_1_color|default('#ff4444') }};">Pick {{ framework_1_name|default('Laravel') }} if:</h3>
+      <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+        {% for bullet in framework_1_bullets|default('Point 1|Point 2')|split('|') %}
+          <li style="font-size: 0.8rem; color: #9ca3af; display: flex; gap: 0.4rem;">
+            <span style="color: {{ framework_1_color|default('#ff4444') }}; flex-shrink: 0;">→</span> {{ bullet|trim }}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div style="padding: 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; border-top: 3px solid {{ framework_2_color|default('#8b5cf6') }};">
+      <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: {{ framework_2_color|default('#8b5cf6') }};">Pick {{ framework_2_name|default('MonkeysLegion') }} if:</h3>
+      <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+        {% for bullet in framework_2_bullets|default('Point 1|Point 2')|split('|') %}
+          <li style="font-size: 0.8rem; color: #9ca3af; display: flex; gap: 0.4rem;">
+            <span style="color: {{ framework_2_color|default('#8b5cf6') }}; flex-shrink: 0;">→</span> {{ bullet|trim }}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>

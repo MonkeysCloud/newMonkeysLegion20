@@ -1,0 +1,29 @@
+{# Canvas SDC: security_matrix — rendered by Next.js frontend #}
+<div data-component="security_matrix" style="padding: 3rem 2rem; background: #0b0d10; color: white; text-align: center; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2);">
+  <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 1rem;">{{ title|default('Secure by default') }}</h2>
+  <p style="color: #9ca3af; font-size: 1.1rem; max-width: 700px; margin: 0 auto; margin-bottom: 2rem;">
+    {{ subtitle|default('A direct, feature-by-feature comparison...') }}
+  </p>
+  <div style="text-align: left; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 1rem;">
+    <div style="display: flex; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; margin-bottom: 1rem; text-align: center;">
+      <div style="flex: 2; text-align: left;">Security Feature</div>
+      <div style="flex: 1">ML v2.0</div>
+      <div style="flex: 1">Laravel 11</div>
+      <div style="flex: 1">Symfony 7</div>
+    </div>
+    {% block rows %}
+      <div style="display: flex; flex-direction: column; gap: 0.5rem; min-height: 150px; padding-bottom: 4rem;">
+        {% if rows %}
+          {{ rows }}
+        {% else %}
+          <div style="opacity: 0.5; font-size: 0.85rem; font-style: italic; text-align: center; margin-top: 2rem; width: 100%;">
+            Drag security_row components here...
+          </div>
+        {% endif %}
+      </div>
+    {% endblock %}
+  </div>
+  <div style="margin-top: 2rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; text-align: left; font-size: 0.9rem; color: #d1d5db;">
+    {{ footer_note|default('Every ⚠️ or ❌ in Laravel or Symfony is a decision your team has to make...') }}
+  </div>
+</div>

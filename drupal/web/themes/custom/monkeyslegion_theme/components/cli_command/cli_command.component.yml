@@ -1,0 +1,10 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: CLI Command
+description: A single CLI command entry for the Developer Experience grid.
+status: experimental
+props:
+  type: object
+  properties:
+    command:
+      type: string
+      title: Command

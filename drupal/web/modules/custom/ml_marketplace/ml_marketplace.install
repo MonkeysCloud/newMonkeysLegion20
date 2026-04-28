@@ -1,0 +1,362 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for ml_marketplace.
+ */
+
+use Drupal\taxonomy\Entity\Term;
+use Drupal\user\Entity\Role;
+use Drupal\node\Entity\NodeType;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
+
+/**
+ * Implements hook_install().
+ */
+function ml_marketplace_install() {
+  // -------------------------------------------------------------------------
+  // 1. Create the marketplace_publisher role
+  // -------------------------------------------------------------------------
+  if (!Role::load('marketplace_publisher')) {
+    $role = Role::create([
+      'id' => 'marketplace_publisher',
+      'label' => 'Marketplace Publisher',
+    ]);
+    $role->grantPermission('access content');
+    $role->grantPermission('create marketplace_package content');
+    $role->grantPermission('edit own marketplace_package content');
+    $role->grantPermission('delete own marketplace_package content');
+    $role->save();
+    \Drupal::logger('ml_marketplace')->notice('Created marketplace_publisher role.');
+  }
+
+  // -------------------------------------------------------------------------
+  // 2. Create the marketplace_package content type
+  // -------------------------------------------------------------------------
+  if (!NodeType::load('marketplace_package')) {
+    $type = NodeType::create([
+      'type' => 'marketplace_package',
+      'name' => 'Marketplace Package',
+      'description' => 'A package listing for the MonkeysLegion marketplace.',
+      'display_submitted' => TRUE,
+      'new_revision' => TRUE,
+    ]);
+    $type->save();
+    \Drupal::logger('ml_marketplace')->notice('Created marketplace_package content type.');
+  }
+
+  // -------------------------------------------------------------------------
+  // 3. Create the package_category vocabulary
+  // -------------------------------------------------------------------------
+  $vocabStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary');
+  if (!$vocabStorage->load('package_category')) {
+    $vocab = $vocabStorage->create([
+      'vid' => 'package_category',
+      'name' => 'Package Category',
+      'description' => 'Categories for marketplace packages.',
+    ]);
+    $vocab->save();
+    \Drupal::logger('ml_marketplace')->notice('Created package_category vocabulary.');
+  }
+
+  // -------------------------------------------------------------------------
+  // 4. Create fields on marketplace_package
+  // -------------------------------------------------------------------------
+  $fields = [
+    'field_slug' => [
+      'type' => 'string',
+      'label' => 'Slug',
+      'required' => TRUE,
+    ],
+    'field_summary' => [
+      'type' => 'text_long',
+      'label' => 'Short Summary',
+      'required' => TRUE,
+    ],
+    'field_version' => [
+      'type' => 'string',
+      'label' => 'Version',
+      'required' => TRUE,
+    ],
+    'field_repo_url' => [
+      'type' => 'string',
+      'label' => 'Repository URL',
+      'required' => FALSE,
+    ],
+    'field_docs_url' => [
+      'type' => 'string',
+      'label' => 'Documentation URL',
+      'required' => FALSE,
+    ],
+    'field_install_command' => [
+      'type' => 'string',
+      'label' => 'Install Command',
+      'required' => FALSE,
+    ],
+    'field_composer_install' => [
+      'type' => 'string',
+      'label' => 'Composer Install',
+      'required' => FALSE,
+    ],
+    'field_license' => [
+      'type' => 'string',
+      'label' => 'License',
+      'required' => FALSE,
+    ],
+    'field_icon' => [
+      'type' => 'string',
+      'label' => 'Icon',
+      'required' => FALSE,
+    ],
+    'field_downloads' => [
+      'type' => 'integer',
+      'label' => 'Downloads',
+      'required' => FALSE,
+    ],
+    'field_stars' => [
+      'type' => 'integer',
+      'label' => 'Stars',
+      'required' => FALSE,
+    ],
+    'field_starred_by' => [
+      'type' => 'text_long',
+      'label' => 'Starred By (UIDs)',
+      'required' => FALSE,
+    ],
+  ];
+
+  foreach ($fields as $fieldName => $def) {
+    // Create field storage if it doesn't exist
+    if (!FieldStorageConfig::loadByName('node', $fieldName)) {
+      FieldStorageConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => 'node',
+        'type' => $def['type'],
+        'cardinality' => 1,
+        'translatable' => FALSE,
+      ])->save();
+    }
+
+    // Create field instance on marketplace_package
+    if (!FieldConfig::loadByName('node', 'marketplace_package', $fieldName)) {
+      FieldConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => 'node',
+        'bundle' => 'marketplace_package',
+        'label' => $def['label'],
+        'required' => $def['required'],
+      ])->save();
+    }
+  }
+
+  // Entity reference: field_package_category
+  if (!FieldStorageConfig::loadByName('node', 'field_package_category')) {
+    FieldStorageConfig::create([
+      'field_name' => 'field_package_category',
+      'entity_type' => 'node',
+      'type' => 'entity_reference',
+      'cardinality' => 1,
+      'settings' => [
+        'target_type' => 'taxonomy_term',
+      ],
+    ])->save();
+  }
+
+  if (!FieldConfig::loadByName('node', 'marketplace_package', 'field_package_category')) {
+    FieldConfig::create([
+      'field_name' => 'field_package_category',
+      'entity_type' => 'node',
+      'bundle' => 'marketplace_package',
+      'label' => 'Category',
+      'required' => TRUE,
+      'settings' => [
+        'handler' => 'default:taxonomy_term',
+        'handler_settings' => [
+          'target_bundles' => ['package_category' => 'package_category'],
+        ],
+      ],
+    ])->save();
+  }
+
+  \Drupal::logger('ml_marketplace')->notice('Created all marketplace_package fields.');
+
+  // -------------------------------------------------------------------------
+  // 5. Pre-populate default categories
+  // -------------------------------------------------------------------------
+  $categories = [
+    'Core', 'HTTP', 'Database', 'AI/ML', 'Authentication',
+    'Queue', 'Cache', 'Telemetry', 'WebSockets', 'CLI',
+    'Community', 'Routing', 'Testing', 'DevOps', 'Utilities',
+  ];
+
+  foreach ($categories as $name) {
+    $existing = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+      'vid' => 'package_category',
+      'name' => $name,
+    ]);
+    if (empty($existing)) {
+      Term::create([
+        'vid' => 'package_category',
+        'name' => $name,
+      ])->save();
+    }
+  }
+
+  \Drupal::logger('ml_marketplace')->notice('Pre-populated package categories.');
+
+  // -------------------------------------------------------------------------
+  // 6. Create user profile fields
+  // -------------------------------------------------------------------------
+  $userFields = [
+    'field_display_name' => [
+      'type' => 'string',
+      'label' => 'Display Name',
+    ],
+    'field_username_slug' => [
+      'type' => 'string',
+      'label' => 'Username Slug',
+    ],
+    'field_bio' => [
+      'type' => 'text_long',
+      'label' => 'Bio',
+    ],
+    'field_website' => [
+      'type' => 'string',
+      'label' => 'Website URL',
+    ],
+    'field_avatar_url' => [
+      'type' => 'string',
+      'label' => 'Avatar URL',
+    ],
+    'field_banner_url' => [
+      'type' => 'string',
+      'label' => 'Banner URL',
+    ],
+    'field_social_github' => [
+      'type' => 'string',
+      'label' => 'GitHub URL',
+    ],
+    'field_social_twitter' => [
+      'type' => 'string',
+      'label' => 'Twitter/X URL',
+    ],
+    'field_social_linkedin' => [
+      'type' => 'string',
+      'label' => 'LinkedIn URL',
+    ],
+    'field_social_discord' => [
+      'type' => 'string',
+      'label' => 'Discord Username',
+    ],
+  ];
+
+  foreach ($userFields as $fieldName => $def) {
+    if (!FieldStorageConfig::loadByName('user', $fieldName)) {
+      FieldStorageConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => 'user',
+        'type' => $def['type'],
+        'cardinality' => 1,
+        'translatable' => FALSE,
+      ])->save();
+    }
+
+    if (!FieldConfig::loadByName('user', 'user', $fieldName)) {
+      FieldConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => 'user',
+        'bundle' => 'user',
+        'label' => $def['label'],
+        'required' => FALSE,
+      ])->save();
+    }
+  }
+
+  \Drupal::logger('ml_marketplace')->notice('Created user profile fields.');
+
+  // -------------------------------------------------------------------------
+  // 7. Grant JSON:API permissions for anonymous users to read packages
+  // -------------------------------------------------------------------------
+  $anonymousRole = Role::load('anonymous');
+  if ($anonymousRole) {
+    $anonymousRole->grantPermission('access content');
+    $anonymousRole->save();
+  }
+
+  $authenticatedRole = Role::load('authenticated');
+  if ($authenticatedRole) {
+    $authenticatedRole->grantPermission('access content');
+    $authenticatedRole->save();
+  }
+}
+
+/**
+ * Add user profile fields for marketplace settings.
+ */
+function ml_marketplace_update_10001() {
+  $userFields = [
+    'field_display_name' => ['type' => 'string', 'label' => 'Display Name'],
+    'field_username_slug' => ['type' => 'string', 'label' => 'Username Slug'],
+    'field_bio' => ['type' => 'text_long', 'label' => 'Bio'],
+    'field_website' => ['type' => 'string', 'label' => 'Website URL'],
+  ];
+
+  foreach ($userFields as $fieldName => $def) {
+    if (!FieldStorageConfig::loadByName('user', $fieldName)) {
+      FieldStorageConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => 'user',
+        'type' => $def['type'],
+        'cardinality' => 1,
+        'translatable' => FALSE,
+      ])->save();
+    }
+
+    if (!FieldConfig::loadByName('user', 'user', $fieldName)) {
+      FieldConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => 'user',
+        'bundle' => 'user',
+        'label' => $def['label'],
+        'required' => FALSE,
+      ])->save();
+    }
+  }
+}
+
+/**
+ * Add avatar, banner, and social link fields to user profiles.
+ */
+function ml_marketplace_update_10002() {
+  $userFields = [
+    'field_avatar_url' => ['type' => 'string', 'label' => 'Avatar URL'],
+    'field_banner_url' => ['type' => 'string', 'label' => 'Banner URL'],
+    'field_social_github' => ['type' => 'string', 'label' => 'GitHub URL'],
+    'field_social_twitter' => ['type' => 'string', 'label' => 'Twitter/X URL'],
+    'field_social_linkedin' => ['type' => 'string', 'label' => 'LinkedIn URL'],
+    'field_social_discord' => ['type' => 'string', 'label' => 'Discord Username'],
+  ];
+
+  foreach ($userFields as $fieldName => $def) {
+    if (!FieldStorageConfig::loadByName('user', $fieldName)) {
+      FieldStorageConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => 'user',
+        'type' => $def['type'],
+        'cardinality' => 1,
+        'translatable' => FALSE,
+      ])->save();
+    }
+
+    if (!FieldConfig::loadByName('user', 'user', $fieldName)) {
+      FieldConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => 'user',
+        'bundle' => 'user',
+        'label' => $def['label'],
+        'required' => FALSE,
+      ])->save();
+    }
+  }
+}

@@ -1,0 +1,10 @@
+name: MonkeysLegion Theme
+type: theme
+description: Custom theme for MonkeysLegion v2.0 site with Canvas SDC components.
+core_version_requirement: ^11
+base theme: false
+components:
+  namespaces:
+    monkeyslegion_theme: components
+regions:
+  content: Content

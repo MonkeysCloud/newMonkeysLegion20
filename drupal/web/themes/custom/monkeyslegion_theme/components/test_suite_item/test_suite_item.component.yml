@@ -1,0 +1,10 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Test Suite Item
+description: A single test suite entry with checkmark for the Testing section.
+status: experimental
+props:
+  type: object
+  properties:
+    label:
+      type: string
+      title: Suite Description

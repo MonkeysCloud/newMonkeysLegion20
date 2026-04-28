@@ -1,0 +1,31 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Community CTA
+description: Community links and call-to-action.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Title Prefix
+      default: 'Join the'
+    title_gradient:
+      type: string
+      title: Gradient Title Text
+      default: 'build.'
+    subtitle:
+      type: string
+      title: Section Subtitle
+    cta_heading:
+      type: string
+      title: CTA Heading
+      default: 'Ready to ship?'
+    terminal_command:
+      type: string
+      title: Terminal Command
+      default: 'composer create-project monkeyscloud/monkeyslegion-skeleton my-app'
+slots:
+  links:
+    title: Community Links
+  buttons:
+    title: CTA Buttons

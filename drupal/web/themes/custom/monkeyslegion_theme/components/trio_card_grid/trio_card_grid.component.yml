@@ -1,0 +1,23 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Trio Card Grid
+description: Three-column card grid section with title.
+status: experimental
+slots:
+  cards:
+    title: Cards
+    description: Drop glass-card components here (3 recommended)
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'And'
+    title_gradient:
+      type: string
+      title: Gradient Text
+      default: 'more.'
+    background:
+      type: string
+      title: Background Variant
+      default: 'alt'

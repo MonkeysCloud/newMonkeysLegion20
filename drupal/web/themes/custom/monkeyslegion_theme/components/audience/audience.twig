@@ -1,0 +1,21 @@
+{# Canvas SDC: audience — rendered by Next.js frontend #}
+<div data-component="audience" style="padding: 3rem 2rem; background: #0b0d10; color: white; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2);">
+  <h2 style="font-size: 2.2rem; font-weight: 800; text-align: center; margin-bottom: 0.5rem;">{{ title|default('Built for ') }}<span style="background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">{{ title_gradient|default('five kinds of teams.') }}</span></h2>
+  <p style="color: #9ca3af; font-size: 1.1rem; text-align: center; max-width: 700px; margin: 0 auto 2rem auto;">{{ subtitle|default('') }}</p>
+
+  <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+    <span style="background: #8b5cf6; color: white; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; text-transform: uppercase;">Audience Cards</span>
+    <span style="color: #6b7280; font-size: 0.75rem;">Drag Feature Card components here</span>
+  </div>
+  {% block tiles %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; min-height: 120px; padding: 1rem; background: rgba(255,255,255,0.02); border: 2px dashed rgba(139,92,246,0.3); border-radius: 8px;">
+      {% if tiles %}
+        {{ tiles }}
+      {% else %}
+        <div style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; color: #4b5563; font-size: 0.85rem; font-style: italic;">
+          ＋ Drop Feature Card components here…
+        </div>
+      {% endif %}
+    </div>
+  {% endblock %}
+</div>

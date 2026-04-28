@@ -1,0 +1,12 @@
+{# Feature Category — Canvas admin preview #}
+<div data-component="feature_category" style="padding: 3rem 2rem; background: {{ background == 'alt' ? '#131620' : '#0e1117' }}; color: white; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.15);">
+  <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+    <div style="width: 4px; height: 28px; border-radius: 2px; background: {{ color|default('#8b5cf6') }};"></div>
+    <h2 style="font-size: 1.5rem; font-weight: 800; margin: 0;">{{ category|default('Category') }}</h2>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+    {% block items %}
+      <div style="opacity: 0.5; font-style: italic; text-align: center; grid-column: 1/-1; padding: 2rem;">Drag feature_deep_card components here...</div>
+    {% endblock %}
+  </div>
+</div>

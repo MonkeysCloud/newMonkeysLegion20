@@ -1,0 +1,64 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Package Card
+description: Single package card with name, version, tagline, install command, and docs link. Category maps to the package_category taxonomy.
+status: experimental
+props:
+  type: object
+  properties:
+    name:
+      type: string
+      title: Package Name
+      default: 'monkeyslegion-core'
+    version:
+      type: string
+      title: Version
+      default: 'v2.0'
+    icon:
+      type: string
+      title: Emoji Icon
+      default: '⚙️'
+    tagline:
+      type: string
+      title: Tagline
+      default: 'The foundation every other package builds on.'
+    bullets:
+      type: string
+      title: Feature Bullets (pipe-separated)
+      description: 'Key features, separated by pipes. e.g. Boot lifecycle|Provider scanner|#[BootAfter]'
+      default: 'Boot lifecycle management|Provider scanner with topological sort'
+    category:
+      type: string
+      title: Category
+      description: Select a package category (maps to package_category taxonomy)
+      enum:
+        - Foundation
+        - HTTP & Routing
+        - Data Layer
+        - Auth & Security
+        - Rendering
+        - Infrastructure
+        - Operations
+        - Tooling
+        - AI
+      default: 'Foundation'
+    install:
+      type: string
+      title: Install Command
+      default: 'composer require monkeyscloud/monkeyslegion-core'
+    github_url:
+      type: string
+      title: GitHub URL
+      default: 'https://github.com/MonkeysCloud/MonkeysLegion-Core'
+    docs_url:
+      type: string
+      title: Documentation URL
+      default: '/docs/core'
+    color:
+      type: string
+      title: Accent Color
+      description: Hex color code — auto-set from taxonomy field_color
+      default: '#8b5cf6'
+    highlight:
+      type: boolean
+      title: Featured Package
+      default: false

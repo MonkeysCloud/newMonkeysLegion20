@@ -1,0 +1,29 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Page Hero
+description: Full-width hero section for documentation pages with eyebrow badges, headline with gradient text, subtitle, and action buttons.
+status: experimental
+slots:
+  actions:
+    title: Action Buttons
+    description: Drop button or terminal components here
+props:
+  type: object
+  properties:
+    eyebrow:
+      type: string
+      title: Eyebrow Text
+      description: Small text badges above the title (pipe-separated)
+      default: 'monkeyslegion@2.0 · PHP 8.4+'
+    title:
+      type: string
+      title: Main Title
+      default: 'Every feature.'
+    title_gradient:
+      type: string
+      title: Gradient Text
+      description: The word(s) that appear in gradient color
+      default: 'Deep dive.'
+    subtitle:
+      type: string
+      title: Subtitle
+      default: 'Nineteen capabilities. One composer install.'

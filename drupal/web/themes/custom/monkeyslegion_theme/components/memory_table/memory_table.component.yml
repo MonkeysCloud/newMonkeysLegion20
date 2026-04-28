@@ -1,0 +1,23 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Memory Table
+description: Table of memory strategies with strategy name and use case.
+status: experimental
+slots:
+  rows:
+    title: Memory Rows
+    description: Drop memory_row components here
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'Six memory'
+    title_gradient:
+      type: string
+      title: Gradient Text
+      default: 'strategies.'
+    subtitle:
+      type: string
+      title: Subtitle
+      default: 'Each designed for a different context management pattern.'

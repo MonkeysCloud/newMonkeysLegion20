@@ -1,0 +1,14 @@
+{# Comparison Table Section — Canvas admin preview #}
+<div data-component="comparison_table_section" style="padding: 3rem 2rem; background: #0e1117; color: white; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.15);">
+  <h2 style="font-size: 2rem; font-weight: 800; text-align: center; margin-bottom: 2rem;">{{ title|default('Feature-by-feature.') }}</h2>
+  <div style="background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08);">
+    <div style="display: grid; grid-template-columns: 2fr 1.5fr 1.5fr; padding: 1rem 1.25rem; font-weight: 700; font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
+      <span>Capability</span>
+      <span>{{ column_1|default('MonkeysLegion') }}</span>
+      <span>{{ column_2|default('Laravel 11') }}</span>
+    </div>
+    {% block rows %}
+      <div style="opacity: 0.5; font-style: italic; text-align: center; padding: 2rem;">Drag comparison_table_row components here...</div>
+    {% endblock %}
+  </div>
+</div>

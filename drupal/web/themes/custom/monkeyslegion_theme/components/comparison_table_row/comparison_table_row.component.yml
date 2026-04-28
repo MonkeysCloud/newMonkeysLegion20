@@ -1,0 +1,19 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Comparison Table Row
+description: Single comparison row with capability name and two framework values.
+status: experimental
+props:
+  type: object
+  properties:
+    capability:
+      type: string
+      title: Capability
+      default: 'Routing'
+    value_1:
+      type: string
+      title: Framework 1 Value
+      default: '✅ Attribute-first'
+    value_2:
+      type: string
+      title: Framework 2 Value
+      default: '⚠️ Config or attribute'

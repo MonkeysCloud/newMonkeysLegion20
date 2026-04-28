@@ -1,0 +1,13 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Requirement Row
+description: A single requirement row showing name and version for the Quick Start section.
+status: experimental
+props:
+  type: object
+  properties:
+    name:
+      type: string
+      title: Requirement Name
+    version:
+      type: string
+      title: Version Info

@@ -1,0 +1,21 @@
+{# CTA Break — Canvas admin preview #}
+<div data-component="cta_break" style="padding: 3rem 2rem; background: {{ variant == 'glass' ? 'rgba(255,255,255,0.03)' : 'linear-gradient(135deg, rgba(139,92,246,0.08), rgba(6,182,212,0.08))' }}; color: white; text-align: center; border-radius: 8px; border: 1px solid rgba(139,92,246,0.15);">
+  {% if variant == 'glass' %}
+    <div style="max-width: 600px; margin: 0 auto; padding: 2rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;">
+  {% endif %}
+  <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.75rem;">
+    {{ title|default('Ready to see the code?') }}
+    {% if title_gradient %}<span style="background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ title_gradient }}</span>{% endif %}
+  </h3>
+  <p style="color: #9ca3af; margin-bottom: 1.5rem; font-size: 0.9rem;">{{ description }}</p>
+  {% if show_terminal %}
+    <div style="max-width: 450px; margin: 0 auto 1.5rem; text-align: left; background: rgba(0,0,0,0.3); border-radius: 8px; overflow: hidden;">
+      <div style="padding: 0.4rem 0.75rem; display: flex; gap: 0.3rem;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #ff5f57;"></span><span style="width: 8px; height: 8px; border-radius: 50%; background: #ffbd2e;"></span><span style="width: 8px; height: 8px; border-radius: 50%; background: #28ca41;"></span></div>
+      <div style="padding: 0.75rem; font-family: monospace; font-size: 0.8rem; color: #e2e8f0;"><span style="color: #06b6d4;">$</span> {{ terminal_command }}</div>
+    </div>
+  {% endif %}
+  <div style="display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+    {% block actions %}{% endblock %}
+  </div>
+  {% if variant == 'glass' %}</div>{% endif %}
+</div>

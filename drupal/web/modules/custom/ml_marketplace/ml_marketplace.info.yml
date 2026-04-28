@@ -1,0 +1,11 @@
+name: 'ML Marketplace'
+type: module
+description: 'User registration, package publishing, and marketplace API for the MonkeysLegion ecosystem.'
+core_version_requirement: ^11
+package: MonkeysLegion
+dependencies:
+  - drupal:jsonapi
+  - drupal:user
+  - drupal:node
+  - drupal:taxonomy
+  - simple_oauth:simple_oauth

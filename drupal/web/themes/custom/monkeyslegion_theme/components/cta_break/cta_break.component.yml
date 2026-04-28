@@ -1,0 +1,34 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: CTA Break
+description: Mid-page call-to-action break with title, description, and action buttons.
+status: experimental
+slots:
+  actions:
+    title: Action Buttons
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: CTA Title
+      default: 'Ready to see the code?'
+    title_gradient:
+      type: string
+      title: Gradient Text
+    description:
+      type: string
+      title: Description
+      default: 'Dive into the detailed API.'
+    show_terminal:
+      type: boolean
+      title: Show Terminal Block
+      default: false
+    terminal_command:
+      type: string
+      title: Terminal Command
+      default: 'composer require monkeyscloud/monkeyslegion-apex'
+    variant:
+      type: string
+      title: Visual Variant
+      description: 'gradient, glass, or minimal'
+      default: 'gradient'

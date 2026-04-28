@@ -1,0 +1,6 @@
+name: ML Canvas API
+type: module
+description: Exposes Canvas page layout data as a public JSON endpoint for the Next.js frontend.
+core_version_requirement: ^11
+dependencies:
+  - canvas:canvas

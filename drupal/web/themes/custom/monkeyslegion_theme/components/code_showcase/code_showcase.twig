@@ -1,0 +1,10 @@
+{# Canvas SDC: code_showcase — rendered by Next.js frontend #}
+<div data-component="code_showcase" style="padding-bottom: 4rem; min-height: 150px; background: rgba(0,0,0,0.2);">
+  <h2 style="color: white; padding: 1rem;">Code Showcase: {{ title|default('Show, don\'t tell.') }}</h2>
+  <div style="border: 2px dashed #999; padding: 1rem; margin: 1rem;">
+    <h3>Code Tabs Slot</h3>
+    {% block tabs %}
+      <p style="color: #666;">Drag Code Tabs here.</p>
+    {% endblock %}
+  </div>
+</div>

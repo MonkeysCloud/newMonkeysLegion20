@@ -1,0 +1,27 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Migration Table Section
+description: Migration mapping table showing concept translations between frameworks.
+status: experimental
+slots:
+  rows:
+    title: Migration Rows
+    description: Drop migration_table_row components here
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'Migrating from'
+    title_gradient:
+      type: string
+      title: Gradient Text
+      default: 'Laravel.'
+    from_label:
+      type: string
+      title: From Column Header
+      default: 'Laravel'
+    to_label:
+      type: string
+      title: To Column Header
+      default: 'MonkeysLegion'

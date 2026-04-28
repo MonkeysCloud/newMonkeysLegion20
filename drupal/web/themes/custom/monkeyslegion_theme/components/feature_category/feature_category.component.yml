@@ -1,0 +1,23 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Feature Category
+description: Feature category section with accent color, title, and feature cards slot.
+status: experimental
+slots:
+  items:
+    title: Feature Cards
+    description: Drop feature_deep_card components here
+props:
+  type: object
+  properties:
+    category:
+      type: string
+      title: Category Name
+      default: 'HTTP & Routing'
+    color:
+      type: string
+      title: Accent Color
+      default: '#8b5cf6'
+    background:
+      type: string
+      title: Background Variant
+      default: 'default'

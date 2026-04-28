@@ -1,0 +1,21 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Code Tab
+description: A code tab element for the Code Showcase block.
+status: experimental
+props:
+  type: object
+  properties:
+    label:
+      type: string
+      title: Tab Label
+    language:
+      type: string
+      title: Programming Language
+      default: php
+    code:
+      type: string
+      title: Code Snippet
+      pattern: '(.|\r?\n)*'
+    description:
+      type: string
+      title: Description Note

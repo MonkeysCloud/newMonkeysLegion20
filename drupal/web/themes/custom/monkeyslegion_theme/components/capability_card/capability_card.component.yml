@@ -1,0 +1,19 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Capability Card
+description: Single capability card with icon, title, and description.
+status: experimental
+props:
+  type: object
+  properties:
+    icon:
+      type: string
+      title: Emoji Icon
+      default: '🔌'
+    title:
+      type: string
+      title: Capability Title
+      default: 'Provider Abstraction'
+    description:
+      type: string
+      title: Description
+      default: 'Swap providers without changing application code.'

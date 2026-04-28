@@ -1,0 +1,22 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Benchmark Row
+description: An atomic benchmark metric row.
+status: experimental
+props:
+  type: object
+  properties:
+    operation:
+      type: string
+      title: Operation Name
+    ml_value:
+      type: number
+      title: MonkeysLegion Ops/sec
+    ml_suffix:
+      type: string
+      title: Value Suffix (e.g. K)
+    vs_laravel:
+      type: string
+      title: vs Laravel
+    vs_symfony:
+      type: string
+      title: vs Symfony

@@ -1,0 +1,14 @@
+{# Memory Table — Canvas admin preview #}
+<div data-component="memory_table" style="padding: 3rem 2rem; background: #0e1117; color: white; text-align: center; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.15);">
+  <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;">{{ title|default('Six memory') }} <span style="background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ title_gradient|default('strategies.') }}</span></h2>
+  <p style="color: #9ca3af; margin-bottom: 2rem;">{{ subtitle }}</p>
+  <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 1rem; text-align: left;">
+    <div style="display: flex; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; margin-bottom: 0.5rem; font-size: 0.85rem;">
+      <div style="flex: 1;">Strategy</div>
+      <div style="flex: 2;">Use Case</div>
+    </div>
+    {% block rows %}
+      <div style="opacity: 0.5; font-style: italic; padding: 2rem; text-align: center;">Drag memory_row components here...</div>
+    {% endblock %}
+  </div>
+</div>

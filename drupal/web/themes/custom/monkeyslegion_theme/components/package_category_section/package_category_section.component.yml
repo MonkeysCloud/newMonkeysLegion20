@@ -1,0 +1,39 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Package Category Section
+description: Package category header with color accent line and packages slot. Category maps to the package_category taxonomy.
+status: experimental
+slots:
+  packages:
+    title: Package Cards
+    description: Drop package_card components here
+props:
+  type: object
+  properties:
+    category:
+      type: string
+      title: Category
+      description: Select a package category (maps to package_category taxonomy)
+      enum:
+        - Foundation
+        - HTTP & Routing
+        - Data Layer
+        - Auth & Security
+        - Rendering
+        - Infrastructure
+        - Operations
+        - Tooling
+        - AI
+      default: 'Foundation'
+    color:
+      type: string
+      title: Accent Color
+      description: Hex color code — auto-set from taxonomy field_color
+      default: '#8b5cf6'
+    count:
+      type: number
+      title: Package Count
+      default: 3
+    background:
+      type: string
+      title: Background Variant
+      default: 'default'

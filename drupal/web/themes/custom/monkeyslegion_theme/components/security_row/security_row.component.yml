@@ -1,0 +1,25 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Security Row
+description: An atomic security feature row.
+status: experimental
+props:
+  type: object
+  properties:
+    feature:
+      type: string
+      title: Feature Name
+    ml_status:
+      type: string
+      title: MonkeysLegion Status (yes, partial, no)
+    laravel_status:
+      type: string
+      title: Laravel Status (yes, partial, no)
+    laravel_note:
+      type: string
+      title: Laravel Caveat Note
+    symfony_status:
+      type: string
+      title: Symfony Status (yes, partial, no)
+    symfony_note:
+      type: string
+      title: Symfony Caveat Note

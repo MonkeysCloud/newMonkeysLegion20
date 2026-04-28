@@ -1,0 +1,175 @@
+# ===========================================================================
+# User Registration
+# ===========================================================================
+ml_marketplace.register:
+  path: '/api/register'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\RegisterController::register'
+  requirements:
+    _access: 'TRUE'
+  methods: [POST]
+  options:
+    _format: 'json'
+    no_cache: TRUE
+
+# ===========================================================================
+# Marketplace — Public endpoints
+# ===========================================================================
+ml_marketplace.packages_list:
+  path: '/api/marketplace/packages'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\MarketplaceController::listPackages'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+  options:
+    _format: 'json'
+    no_cache: TRUE
+
+ml_marketplace.package_detail:
+  path: '/api/marketplace/packages/{slug}'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\MarketplaceController::getPackage'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+  options:
+    _format: 'json'
+    no_cache: TRUE
+
+ml_marketplace.categories_list:
+  path: '/api/marketplace/categories'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\MarketplaceController::listCategories'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+  options:
+    _format: 'json'
+    no_cache: TRUE
+
+# ===========================================================================
+# Marketplace — Authenticated endpoints
+# ===========================================================================
+ml_marketplace.package_create:
+  path: '/api/marketplace/packages'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\MarketplaceController::createPackage'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  methods: [POST]
+  options:
+    _format: 'json'
+    _auth: ['oauth2']
+    no_cache: TRUE
+
+ml_marketplace.package_star:
+  path: '/api/marketplace/packages/{slug}/star'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\MarketplaceController::starPackage'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  methods: [POST]
+  options:
+    _format: 'json'
+    _auth: ['oauth2']
+    no_cache: TRUE
+
+ml_marketplace.user_packages:
+  path: '/api/marketplace/my-packages'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\MarketplaceController::userPackages'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  methods: [GET]
+  options:
+    _format: 'json'
+    _auth: ['oauth2']
+    no_cache: TRUE
+
+ml_marketplace.user_profile:
+  path: '/api/marketplace/profile/{username}'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\MarketplaceController::userProfile'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+  options:
+    _format: 'json'
+    no_cache: TRUE
+
+ml_marketplace.me:
+  path: '/api/me'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\RegisterController::me'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  methods: [GET]
+  options:
+    _format: 'json'
+    _auth: ['oauth2']
+    no_cache: TRUE
+
+ml_marketplace.update_settings:
+  path: '/api/me/settings'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\RegisterController::updateSettings'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  methods: [PATCH]
+  options:
+    _format: 'json'
+    _auth: ['oauth2']
+    no_cache: TRUE
+
+ml_marketplace.public_profile:
+  path: '/api/profile/{identifier}'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\RegisterController::publicProfile'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+  options:
+    _format: 'json'
+    no_cache: TRUE
+
+ml_marketplace.category_create:
+  path: '/api/marketplace/categories'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\MarketplaceController::createCategory'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  methods: [POST]
+  options:
+    _format: 'json'
+    _auth: ['oauth2']
+    no_cache: TRUE
+
+# ===========================================================================
+# Password Recovery
+# ===========================================================================
+ml_marketplace.forgot_password:
+  path: '/api/forgot-password'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\RegisterController::forgotPassword'
+  requirements:
+    _access: 'TRUE'
+  methods: [POST]
+  options:
+    _format: 'json'
+    no_cache: TRUE
+
+# ===========================================================================
+# User Search
+# ===========================================================================
+ml_marketplace.search_users:
+  path: '/api/search-users'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\RegisterController::searchUsers'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+  options:
+    _format: 'json'
+    no_cache: TRUE
+

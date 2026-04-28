@@ -1,0 +1,25 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Prose Section
+description: Rich text content section with optional title, suited for long-form documentation blocks.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+    title_gradient:
+      type: string
+      title: Gradient Word(s)
+    body:
+      type: string
+      title: Body Text
+    background:
+      type: string
+      title: Background Variant
+      description: 'default or alt'
+      default: 'default'
+    max_width:
+      type: number
+      title: Max Width (px)
+      default: 800

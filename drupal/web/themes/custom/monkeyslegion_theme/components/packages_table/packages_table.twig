@@ -1,0 +1,10 @@
+{# Canvas SDC: packages_table — rendered by Next.js frontend #}
+<div data-component="packages_table" style="padding-bottom: 4rem; min-height: 150px; background: rgba(0,0,0,0.2);">
+  <h2 style="color: white; padding: 1rem;">Packages Table: {{ title|default('The ecosystem.') }}</h2>
+  <div style="border: 2px dashed #999; padding: 1rem; margin: 1rem;">
+    <h3>Package Rows Slot</h3>
+    {% block rows %}
+      <p style="color: #666;">Drag package rows here.</p>
+    {% endblock %}
+  </div>
+</div>

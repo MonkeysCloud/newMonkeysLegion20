@@ -1,0 +1,13 @@
+{# Package Category Section — Canvas admin preview #}
+<div data-component="package_category_section" style="padding: 3rem 2rem; background: {{ background == 'alt' ? '#131620' : '#0e1117' }}; color: white; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.15);">
+  <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+    <div style="width: 4px; height: 28px; border-radius: 2px; background: {{ color|default('#8b5cf6') }};"></div>
+    <h2 style="font-size: 1.5rem; font-weight: 800; margin: 0;">{{ category|default('Category') }}</h2>
+    <span style="font-size: 0.7rem; color: #6b7280; background: rgba(255,255,255,0.05); padding: 0.1rem 0.4rem; border-radius: 999px;">{{ count|default(3) }} packages</span>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1rem;">
+    {% block packages %}
+      <div style="opacity: 0.5; font-style: italic; text-align: center; grid-column: 1/-1; padding: 2rem;">Drag package_card components here...</div>
+    {% endblock %}
+  </div>
+</div>

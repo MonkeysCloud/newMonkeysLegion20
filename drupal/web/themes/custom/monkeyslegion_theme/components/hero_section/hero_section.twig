@@ -1,0 +1,17 @@
+{# Hero section — rendered by Next.js, this template is for Canvas admin preview only #}
+<div class="ml-hero-preview" style="padding: 2rem; background: #0e1117; color: white; text-align: center;">
+  <span style="font-size: 0.75rem; color: #a78bfa; text-transform: uppercase;">{{ version_badge }}</span>
+  <h1 style="font-size: 2rem; margin: 1rem 0;">{{ title }}</h1>
+  <p style="color: #9ca3af;">{{ subtitle }}</p>
+  <div style="margin-top: 1rem;">
+    {% block actions %}
+    {% endblock %}
+  </div>
+  {% if badges %}
+  <div style="margin-top: 1rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;">
+    {% for badge in badges %}
+      <span style="font-size: 0.7rem; padding: 0.2rem 0.6rem; border: 1px solid #333; border-radius: 20px; color: #9ca3af;">{{ badge }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>

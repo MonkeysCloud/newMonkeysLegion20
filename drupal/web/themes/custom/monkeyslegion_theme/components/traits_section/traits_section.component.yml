@@ -1,0 +1,49 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Traits Section
+description: A section with centered title, gradient accent, subtitle, and a grid of child items (e.g. framework_trait cards).
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'What Defines'
+      examples:
+        - 'What Defines'
+    title_gradient:
+      type: string
+      title: Gradient Text
+      default: 'MonkeysLegion v2'
+      examples:
+        - 'MonkeysLegion v2'
+    subtitle:
+      type: string
+      title: Subtitle
+      pattern: '(.|\r?\n)*'
+      default: 'Not a minimal micro-framework. Not a legacy enterprise stack. A modern PHP application platform.'
+      examples:
+        - 'A modern PHP application platform.'
+    background:
+      type: string
+      title: Background Variant
+      default: 'default'
+      examples:
+        - 'default'
+      enum:
+        - default
+        - alt
+    columns:
+      type: string
+      title: Grid Columns
+      default: '3'
+      examples:
+        - '3'
+      enum:
+        - '2'
+        - '3'
+        - '4'
+slots:
+  items:
+    title: Trait Cards
+    description: The child items rendered inside the grid (e.g. framework_trait components).

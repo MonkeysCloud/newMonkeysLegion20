@@ -1,0 +1,40 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Package Promo Section
+description: A highly promotional section displaying ecosystem stats, a highlight grid, and an install terminal.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'The Package'
+      examples:
+        - 'The Package'
+    title_gradient:
+      type: string
+      title: Gradient Text
+      default: 'Ecosystem'
+      examples:
+        - 'Ecosystem'
+    subtitle:
+      type: string
+      title: Subtitle
+      default: 'MonkeysLegion isn''t a monolith. It''s built from 26 independently-versioned packages that compose beautifully together.'
+      examples:
+        - 'MonkeysLegion isn''t a monolith. It''s built from 26 independently-versioned packages that compose beautifully together.'
+    terminal_command:
+      type: string
+      title: Terminal Command
+      default: 'composer require monkeyscloud/monkeyslegion-skeleton my-app'
+      examples:
+        - 'composer require monkeyscloud/monkeyslegion-skeleton my-app'
+slots:
+  stats:
+    title: Statistics
+    description: Add Stat Item components here.
+  highlights:
+    title: Highlighted Packages
+    description: Add Package Highlight components here to feature them in the grid.
+  actions:
+    title: Call to Action Buttons

@@ -1,0 +1,20 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Benchmarks Table
+description: Animated benchmark comparison table with count-up numbers and framework comparison.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'Benchmarked, not marketed.'
+    subtitle:
+      type: string
+      title: Section Subtitle
+    test_environment:
+      type: string
+      title: Test Environment Description
+slots:
+  rows:
+    title: Benchmark Rows

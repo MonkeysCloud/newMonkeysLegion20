@@ -1,0 +1,5 @@
+{# Canvas SDC: cta_button — rendered by Next.js frontend #}
+{% set is_primary = variant|default('primary') == 'primary' %}
+<a data-component="cta_button" href="{{ url|default('#') }}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 0.6rem 1.5rem; border-radius: 8px; font-size: 0.9rem; font-weight: 700; text-decoration: none; text-align: center; {{ is_primary ? 'background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: white;' : 'background: rgba(255,255,255,0.08); color: #e5e7eb; border: 1px solid rgba(255,255,255,0.15);' }}">
+  {{ label|default('Button Label') }}
+</a>

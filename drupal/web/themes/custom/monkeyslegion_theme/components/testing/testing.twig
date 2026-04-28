@@ -1,0 +1,44 @@
+{# Canvas SDC: testing — rendered by Next.js frontend #}
+<div data-component="testing" style="padding: 3rem 2rem; background: #0b0d10; color: white; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2);">
+  <h2 style="font-size: 2.2rem; font-weight: 800; text-align: center; margin-bottom: 0.5rem;">{{ title|default('Tested. Compiled. Ready.') }}</h2>
+  <p style="color: #9ca3af; font-size: 1.1rem; text-align: center; max-width: 700px; margin: 0 auto 2rem auto;">{{ subtitle|default('') }}</p>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    {# Left column: Test Suite #}
+    <div>
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+        <span style="background: #3b82f6; color: white; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; text-transform: uppercase;">Test Suite</span>
+      </div>
+      <p style="font-size: 0.85rem; color: #9ca3af; margin: 0 0 1rem 0;">{{ test_description|default('Every package ships with its own PHPUnit 11 suite.') }}</p>
+      {% block suites %}
+        <div style="display: flex; flex-direction: column; gap: 0.15rem; min-height: 120px; padding: 0.75rem; background: rgba(255,255,255,0.02); border: 2px dashed rgba(59,130,246,0.3); border-radius: 8px;">
+          {% if suites %}
+            {{ suites }}
+          {% else %}
+            <div style="display: flex; align-items: center; justify-content: center; color: #4b5563; font-size: 0.85rem; font-style: italic; padding: 2rem 0;">
+              ＋ Drop Test Suite Item here…
+            </div>
+          {% endif %}
+        </div>
+      {% endblock %}
+    </div>
+
+    {# Right column: Production Checklist #}
+    <div>
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+        <span style="background: #10b981; color: white; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; text-transform: uppercase;">Production</span>
+      </div>
+      {% block checklist %}
+        <div style="min-height: 120px; padding: 0.75rem; background: rgba(255,255,255,0.02); border: 2px dashed rgba(16,185,129,0.3); border-radius: 8px;">
+          {% if checklist %}
+            {{ checklist }}
+          {% else %}
+            <div style="display: flex; align-items: center; justify-content: center; color: #4b5563; font-size: 0.85rem; font-style: italic; padding: 2rem 0;">
+              ＋ Drop Production Check here…
+            </div>
+          {% endif %}
+        </div>
+      {% endblock %}
+    </div>
+  </div>
+</div>

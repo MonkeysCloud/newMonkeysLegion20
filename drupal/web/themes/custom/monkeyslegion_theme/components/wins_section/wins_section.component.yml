@@ -1,0 +1,27 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Wins Section
+description: '"Where X wins" section with advantage cards displaying strengths of a framework.'
+status: experimental
+slots:
+  cards:
+    title: Advantage Cards
+    description: Drop wins_card components here
+props:
+  type: object
+  properties:
+    framework_name:
+      type: string
+      title: Framework Name
+      default: 'Laravel'
+    accent_color:
+      type: string
+      title: Accent Color
+      default: '#ff4444'
+    callout_text:
+      type: string
+      title: Bottom Callout Text
+      description: Summary text below the cards
+    background:
+      type: string
+      title: Background Variant
+      default: 'default'

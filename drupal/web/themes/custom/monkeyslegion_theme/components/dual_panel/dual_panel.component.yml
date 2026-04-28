@@ -1,0 +1,26 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Dual Panel
+description: Two-column layout section with left and right slots, used for code-plus-explanation layouts.
+status: experimental
+slots:
+  left:
+    title: Left Column
+    description: Code block or explanation content
+  right:
+    title: Right Column
+    description: Code block or explanation content
+props:
+  type: object
+  properties:
+    background:
+      type: string
+      title: Background Variant
+      default: 'default'
+    layer_badge:
+      type: string
+      title: Layer Badge Text
+      description: Optional badge like 'Provider Layer' or 'Primitives Layer'
+    layer_color:
+      type: string
+      title: Layer Badge Color
+      default: '#10b981'

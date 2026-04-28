@@ -1,0 +1,19 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Pillar Card
+description: An atomic pillar card component.
+status: experimental
+props:
+  type: object
+  properties:
+    icon:
+      type: string
+      title: Icon Name
+    title:
+      type: string
+      title: Card Title
+    subtitle:
+      type: string
+      title: Subtitle
+    description:
+      type: string
+      title: Card Description

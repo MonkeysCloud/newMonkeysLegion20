@@ -1,0 +1,14 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Text Block
+description: A rich-text content block with CKEditor. Can be dropped into any slot.
+status: experimental
+props:
+  type: object
+  properties:
+    content:
+      type: string
+      title: Content
+      contentMediaType: 'text/html'
+      default: '<p>Your content here</p>'
+      examples:
+        - '<p>Your content here</p>'

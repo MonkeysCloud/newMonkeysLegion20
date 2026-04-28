@@ -1,0 +1,12 @@
+{# Stats Bar — Canvas admin preview #}
+<div data-component="stats_bar" style="padding: 2rem; background: #0e1117; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); border-radius: 8px;">
+  <div style="display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;">
+    {% for stat in stats|default('Packages:26+|PHP:8.4|License:MIT')|split('|') %}
+      {% set parts = stat|split(':') %}
+      <div style="text-align: center;">
+        <div style="font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ parts[1]|default('—') }}</div>
+        <div style="font-size: 0.65rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.2rem;">{{ parts[0] }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

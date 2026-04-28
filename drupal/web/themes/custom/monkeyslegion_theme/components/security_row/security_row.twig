@@ -1,0 +1,12 @@
+<div class="ml-securityrow-preview" style="display: flex; background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 0.5rem 0; width: 100%; text-align: center; align-items: center;">
+  <div style="flex: 2; font-weight: 500; text-align: left; padding-right: 1rem;">{{ feature|default('Example Security Feature') }}</div>
+  <div style="flex: 1; font-size: 1.1rem;">{% if ml_status == 'yes' %}✅{% elseif ml_status == 'partial' %}⚠️{% else %}❌{% endif %}</div>
+  <div style="flex: 1;">
+    <div style="font-size: 1.1rem;">{% if laravel_status == 'yes' %}✅{% elseif laravel_status == 'partial' %}⚠️{% else %}❌{% endif %}</div>
+    {% if laravel_note %}<div style="font-size: 0.75rem; color: #9ca3af; margin-top: 2px;">{{ laravel_note }}</div>{% endif %}
+  </div>
+  <div style="flex: 1;">
+    <div style="font-size: 1.1rem;">{% if symfony_status == 'yes' %}✅{% elseif symfony_status == 'partial' %}⚠️{% else %}❌{% endif %}</div>
+    {% if symfony_note %}<div style="font-size: 0.75rem; color: #9ca3af; margin-top: 2px;">{{ symfony_note }}</div>{% endif %}
+  </div>
+</div>

@@ -1,0 +1,6 @@
+{# Migration Table Row — Canvas admin preview #}
+<div data-component="migration_table_row" style="display: grid; grid-template-columns: 1fr 24px 1fr; padding: 0.75rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.8rem; color: white;">
+  <span style="color: #9ca3af;">{{ from_concept|default('From concept') }}</span>
+  <span style="text-align: center; color: #06b6d4;">→</span>
+  <span style="color: #e2e8f0; font-weight: 500;">{{ to_concept|default('To concept') }}</span>
+</div>

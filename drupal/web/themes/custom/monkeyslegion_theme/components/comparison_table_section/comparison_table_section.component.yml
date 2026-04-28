@@ -1,0 +1,23 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Comparison Table Section
+description: Feature-by-feature comparison table with two framework columns.
+status: experimental
+slots:
+  rows:
+    title: Comparison Rows
+    description: Drop comparison_table_row components here
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'Feature-by-feature.'
+    column_1:
+      type: string
+      title: Column 1 Header
+      default: 'MonkeysLegion'
+    column_2:
+      type: string
+      title: Column 2 Header
+      default: 'Laravel 11'

@@ -1,0 +1,47 @@
+{# Package Card — Canvas admin preview #}
+{% set cat_colors = {
+  'Foundation': '#8b5cf6',
+  'HTTP & Routing': '#3b82f6',
+  'Data Layer': '#06b6d4',
+  'Auth & Security': '#10b981',
+  'Rendering': '#f59e0b',
+  'Infrastructure': '#ec4899',
+  'Operations': '#f97316',
+  'Tooling': '#6b7280',
+  'AI': '#a855f7',
+} %}
+{% set accent = color|default(cat_colors[category] ?? '#8b5cf6') %}
+<div data-component="package_card" style="padding: 1.25rem 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid {{ accent }}; border-radius: 12px; color: white; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start; cursor: pointer;">
+  <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+    {# Header row #}
+    <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+      <span style="font-size: 1.2rem;">{{ icon|default('⚙️') }}</span>
+      <h3 style="font-size: 0.9rem; font-weight: 700; font-family: monospace; margin: 0;">{{ name|default('package-name') }}</h3>
+      <span style="font-size: 0.65rem; font-family: monospace; color: {{ accent }}; font-weight: 600; background: {{ accent }}15; padding: 0.1rem 0.4rem; border-radius: 999px;">{{ version }}</span>
+      <span style="font-size: 0.65rem; color: #6b7280; background: rgba(255,255,255,0.05); padding: 0.1rem 0.4rem; border-radius: 999px;">{{ category|default('Foundation') }}</span>
+      {% if highlight %}<span style="font-size: 0.65rem; color: #a855f7; background: rgba(168,85,247,0.12); padding: 0.1rem 0.4rem; border-radius: 999px; font-weight: 600;">⭐ Featured</span>{% endif %}
+    </div>
+    {# Tagline #}
+    <p style="font-size: 0.8rem; color: #9ca3af; margin: 0;">{{ tagline }}</p>
+    {# Bullets #}
+    {% if bullets %}
+    <div style="display: flex; flex-wrap: wrap; gap: 0.25rem 1rem;">
+      {% for b in bullets|split('|') %}
+        <span style="font-size: 0.7rem; color: #6b7280; display: flex; align-items: center; gap: 0.3em;">
+          <span style="color: {{ accent }}; font-size: 0.4rem;">●</span> {{ b|trim }}
+        </span>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {# Install + Links #}
+    <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.25rem;">
+      <code style="font-size: 0.65rem; color: #6b7280; background: rgba(255,255,255,0.05); padding: 0.25rem 0.4rem; border-radius: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ install }}</code>
+      <a href="{{ github_url }}" style="font-size: 0.65rem; color: #6b7280; text-decoration: none;">GitHub →</a>
+    </div>
+  </div>
+  {# Docs arrow #}
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+    <a href="{{ docs_url|default('/docs') }}" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; background: {{ accent }}12; border: 1px solid {{ accent }}30; color: {{ accent }}; text-decoration: none; font-size: 1rem;">→</a>
+    <span style="font-size: 0.55rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Docs</span>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Testing & Production
+description: Testing and production readiness section.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'Testing & Production Ready'
+    subtitle:
+      type: string
+      title: Section Subtitle
+    test_description:
+      type: string
+      title: Test Suite Description
+      pattern: '(.|\r?\n)*'
+slots:
+  suites:
+    title: Test Suite Items
+  checklist:
+    title: Production Checklist

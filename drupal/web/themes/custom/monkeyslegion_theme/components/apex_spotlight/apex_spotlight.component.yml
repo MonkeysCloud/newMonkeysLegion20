@@ -1,0 +1,33 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Apex AI Spotlight
+description: Full-bleed Apex AI orchestration engine spotlight section with feature tiles and cross-ecosystem comparison.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+    subtitle:
+      type: string
+      title: Section Subtitle
+    eyebrow:
+      type: string
+      title: Eyebrow Text
+      default: 'First in PHP · monkeyslegion-apex@1.0.1'
+    proof_text:
+      type: string
+      title: Proof Paragraph
+    docs_url:
+      type: string
+      title: Documentation URL
+    github_url:
+      type: string
+      title: GitHub URL
+slots:
+  main_tiles:
+    title: Main Content Tiles (Top Grid)
+  secondary_tiles:
+    title: Secondary Content Tiles (Bottom Grid)
+  comparison_rows:
+    title: Comparison Table Rows

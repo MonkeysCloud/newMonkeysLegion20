@@ -1,0 +1,19 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Layer Row
+description: Single architecture layer row with label, detail, and accent color.
+status: experimental
+props:
+  type: object
+  properties:
+    label:
+      type: string
+      title: Layer Label
+      default: 'Pipelines · Crews · MCP'
+    detail:
+      type: string
+      title: Layer Detail
+      default: '← Orchestration'
+    color:
+      type: string
+      title: Accent Color
+      default: '#8b5cf6'

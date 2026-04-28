@@ -1,0 +1,39 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Pick Which
+description: Side-by-side "Pick X if" / "Pick Y if" recommendation cards.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'When to pick'
+    title_gradient:
+      type: string
+      title: Gradient Text
+      default: 'which.'
+    framework_1_name:
+      type: string
+      title: Framework 1 Name
+      default: 'Laravel'
+    framework_1_color:
+      type: string
+      title: Framework 1 Color
+      default: '#ff4444'
+    framework_1_bullets:
+      type: string
+      title: Framework 1 Bullets (pipe-separated)
+      default: 'Large talent pool needed.|Deep Eloquent dependency.|Team has Laravel muscle memory.'
+    framework_2_name:
+      type: string
+      title: Framework 2 Name
+      default: 'MonkeysLegion'
+    framework_2_color:
+      type: string
+      title: Framework 2 Color
+      default: '#8b5cf6'
+    framework_2_bullets:
+      type: string
+      title: Framework 2 Bullets (pipe-separated)
+      default: 'Enterprise or AI-native products.|PHP 8.4 features as first-class.|Security primitives first-party.'

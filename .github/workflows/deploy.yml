@@ -1,0 +1,82 @@
+name: Deploy to GCP
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: monkeyslegion
+  REGION: us-central1
+  AR_REPO: us-central1-docker.pkg.dev/monkeyslegion/monkeyslegion
+  CMS_SERVICE: ml-cms
+  FRONTEND_SERVICE: ml-frontend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: github-deployer@monkeyslegion.iam.gserviceaccount.com
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Build & Push CMS Image
+        run: |
+          docker build \
+            -f docker/drupal/Dockerfile.prod \
+            -t ${{ env.AR_REPO }}/ml-cms:${{ github.sha }} \
+            -t ${{ env.AR_REPO }}/ml-cms:latest \
+            .
+          docker push ${{ env.AR_REPO }}/ml-cms:${{ github.sha }}
+          docker push ${{ env.AR_REPO }}/ml-cms:latest
+
+      - name: Build & Push Frontend Image
+        run: |
+          docker build \
+            -f docker/nextjs/Dockerfile.prod \
+            --build-arg NEXT_PUBLIC_DRUPAL_BASE_URL=https://cms.monkeyslegion.com \
+            --build-arg NEXT_PUBLIC_GA_MEASUREMENT_ID=${{ secrets.GA_MEASUREMENT_ID }} \
+            -t ${{ env.AR_REPO }}/ml-frontend:${{ github.sha }} \
+            -t ${{ env.AR_REPO }}/ml-frontend:latest \
+            .
+          docker push ${{ env.AR_REPO }}/ml-frontend:${{ github.sha }}
+          docker push ${{ env.AR_REPO }}/ml-frontend:latest
+
+      - name: Deploy CMS to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.CMS_SERVICE }} \
+            --image=${{ env.AR_REPO }}/ml-cms:${{ github.sha }} \
+            --region=${{ env.REGION }} \
+            --project=${{ env.PROJECT_ID }} \
+            --quiet
+
+      - name: Deploy Frontend to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.FRONTEND_SERVICE }} \
+            --image=${{ env.AR_REPO }}/ml-frontend:${{ github.sha }} \
+            --region=${{ env.REGION }} \
+            --project=${{ env.PROJECT_ID }} \
+            --quiet
+
+      - name: Verify Deployments
+        run: |
+          CMS_URL=$(gcloud run services describe ${{ env.CMS_SERVICE }} --region=${{ env.REGION }} --format='value(status.url)')
+          FE_URL=$(gcloud run services describe ${{ env.FRONTEND_SERVICE }} --region=${{ env.REGION }} --format='value(status.url)')
+          echo "CMS: $CMS_URL"
+          echo "Frontend: $FE_URL"
+          curl -sf "$CMS_URL/healthz" || echo "CMS health check pending"
+          curl -sf "$FE_URL" -o /dev/null && echo "Frontend OK" || echo "Frontend pending"

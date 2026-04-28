@@ -1,0 +1,15 @@
+{# Code Block Section — Canvas admin preview #}
+<div data-component="code_block_section" style="border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1rem; background: rgba(255,255,255,0.05);">
+    <div style="display: flex; gap: 0.35rem;">
+      <span style="width: 10px; height: 10px; border-radius: 50%; background: #ff5f57;"></span>
+      <span style="width: 10px; height: 10px; border-radius: 50%; background: #ffbd2e;"></span>
+      <span style="width: 10px; height: 10px; border-radius: 50%; background: #28ca41;"></span>
+    </div>
+    <span style="font-size: 0.7rem; color: #6b7280; text-transform: uppercase;">{{ language|default('php') }}</span>
+  </div>
+  {% if header %}
+    <div style="padding: 0.4rem 1rem; font-size: 0.7rem; color: #a78bfa; border-bottom: 1px solid rgba(255,255,255,0.05);">{{ header }}</div>
+  {% endif %}
+  <pre style="margin: 0; padding: 1rem; background: rgba(0,0,0,0.3); font-size: 0.8rem; color: #e2e8f0; overflow-x: auto; font-family: 'JetBrains Mono', monospace;"><code>{{ code|default('// Your code here') }}</code></pre>
+</div>

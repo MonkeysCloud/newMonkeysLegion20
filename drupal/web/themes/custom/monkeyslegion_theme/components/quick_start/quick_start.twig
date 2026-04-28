@@ -1,0 +1,47 @@
+{# Canvas SDC: quick_start — rendered by Next.js frontend #}
+<div data-component="quick_start" style="padding: 3rem 2rem; background: #0b0d10; color: white; text-align: center; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2);">
+  <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem;">{{ title|default('From zero to serving traffic in 90 seconds.') }}</h2>
+  <p style="color: #9ca3af; font-size: 1.1rem; max-width: 700px; margin: 0 auto; margin-bottom: 2rem;">
+    {{ subtitle|default('Install, configure, and serve — three commands is all it takes.') }}
+  </p>
+
+  <div style="text-align: left; margin-bottom: 2.5rem;">
+    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+      <span style="background: #3b82f6; color: white; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; text-transform: uppercase;">Steps</span>
+      <span style="color: #6b7280; font-size: 0.75rem;">Drag Quick Start Step components here</span>
+    </div>
+    {% block steps %}
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; min-height: 140px; padding: 1rem; background: rgba(255,255,255,0.02); border: 2px dashed rgba(59,130,246,0.3); border-radius: 8px;">
+        {% if steps %}
+          {{ steps }}
+        {% else %}
+          <div style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; color: #4b5563; font-size: 0.85rem; font-style: italic;">
+            ＋ Drop Quick Start Step cards here…
+          </div>
+        {% endif %}
+      </div>
+    {% endblock %}
+  </div>
+
+  <div style="text-align: left;">
+    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+      <span style="background: #10b981; color: white; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; text-transform: uppercase;">Requirements</span>
+      <span style="color: #6b7280; font-size: 0.75rem;">Drag Requirement Row components here</span>
+    </div>
+    {% block requirements %}
+      <div style="max-width: 600px; min-height: 80px; padding: 0.75rem; background: rgba(255,255,255,0.03); border: 2px dashed rgba(16,185,129,0.3); border-radius: 8px;">
+        <div style="display: flex; font-weight: 700; font-size: 0.75rem; color: #9ca3af; padding: 0.5rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.1); text-transform: uppercase; letter-spacing: 0.05em;">
+          <div style="flex: 1;">Requirement</div>
+          <div style="flex: 1;">Version</div>
+        </div>
+        {% if requirements %}
+          {{ requirements }}
+        {% else %}
+          <div style="display: flex; align-items: center; justify-content: center; color: #4b5563; font-size: 0.85rem; font-style: italic; padding: 1.5rem 0;">
+            ＋ Drop Requirement Row items here…
+          </div>
+        {% endif %}
+      </div>
+    {% endblock %}
+  </div>
+</div>

@@ -1,0 +1,19 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Button Component
+description: A reusable call to action button.
+status: experimental
+props:
+  type: object
+  properties:
+    text:
+      type: string
+      title: Button Text
+      default: 'Click Me'
+    url:
+      type: string
+      title: Button URL
+      default: '#'
+    style:
+      type: string
+      title: Button Style (primary/secondary)
+      default: 'primary'

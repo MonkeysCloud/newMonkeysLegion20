@@ -1,0 +1,17 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Info Card
+description: A glass card with a title and rich-text body slot. Drop a CKEditor text block into the body slot.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Card Title
+      default: 'How it works'
+      examples:
+        - 'How it works'
+slots:
+  body:
+    title: Card Body
+    description: Rich-text content — use CKEditor blocks for lists, bold, links, etc.

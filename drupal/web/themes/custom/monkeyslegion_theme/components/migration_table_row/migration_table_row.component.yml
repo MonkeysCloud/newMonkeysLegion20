@@ -1,0 +1,15 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Migration Table Row
+description: Single migration row showing concept translation between frameworks.
+status: experimental
+props:
+  type: object
+  properties:
+    from_concept:
+      type: string
+      title: From Concept
+      default: 'Eloquent models'
+    to_concept:
+      type: string
+      title: To Concept
+      default: 'Entity classes with #[Entity], #[Field]'

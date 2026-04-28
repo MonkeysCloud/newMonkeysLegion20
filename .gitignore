@@ -1,0 +1,32 @@
+# Environment
+.env
+
+# Docker volumes
+mysql-data/
+
+# Drupal
+drupal/vendor/
+drupal/web/core/
+drupal/web/modules/contrib/
+drupal/web/themes/contrib/
+drupal/web/profiles/contrib/
+drupal/web/sites/default/files/
+drupal/web/sites/default/settings.local.php
+
+# Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.gemini/
+.antigravityignore
+
+# Database dumps
+dump.sql
+*.sql.gz

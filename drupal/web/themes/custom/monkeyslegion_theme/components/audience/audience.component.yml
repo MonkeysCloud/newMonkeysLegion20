@@ -1,0 +1,21 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Audience Section
+description: Who is it for — audience tiles.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Title Prefix
+      default: 'Built for '
+    title_gradient:
+      type: string
+      title: Gradient Title Text
+      default: 'five kinds of teams.'
+    subtitle:
+      type: string
+      title: Section Subtitle
+slots:
+  tiles:
+    title: Audience Cards

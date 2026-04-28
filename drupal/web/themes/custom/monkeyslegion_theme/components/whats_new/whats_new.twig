@@ -1,0 +1,22 @@
+{# Canvas SDC: whats_new — rendered by Next.js frontend #}
+<div class="ml-whatsnew-preview" style="padding: 3rem 2rem; background: #0b0d10; color: white; text-align: center; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2);">
+  <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, #fff, #93c5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+    {{ title|default('Everything changed. Nothing feels heavy.') }}
+  </h2>
+  <p style="color: #9ca3af; font-size: 1.1rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">
+    {{ description|default('v2.0 is a full architectural pass across the entire ecosystem. Every package is pinned to v2.0+ for API consistency...') }}
+  </p>
+  <div style="margin-top: 2rem; border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px;">
+    {% block cards %}
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; min-height: 150px; padding: 2rem; padding-bottom: 4rem;">
+        {% if cards %}
+          {{ cards }}
+        {% else %}
+          <div style="opacity: 0.5; font-size: 0.85rem; font-style: italic; align-self: center; width: 100%; text-align: center;">
+            Drag feature_card components here...
+          </div>
+        {% endif %}
+      </div>
+    {% endblock %}
+  </div>
+</div>

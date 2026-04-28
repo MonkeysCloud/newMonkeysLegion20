@@ -1,0 +1,49 @@
+{# Canvas SDC: cli_grid — rendered by Next.js frontend #}
+<div data-component="cli_grid" style="padding: 2rem; background: linear-gradient(135deg, #0b0d10 0%, #111827 100%); border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2); margin: 1rem;">
+  <h2 style="font-size: 2rem; font-weight: 800; color: white; margin: 0 0 0.5rem 0;">{{ title|default('Seventeen scaffolders. One CLI.') }}</h2>
+  <p style="color: #9ca3af; font-size: 1rem; margin: 0 0 2rem 0;">{{ subtitle|default('Every major framework object has a make:* command.') }}</p>
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
+    <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 1rem; border: 1px solid rgba(255,255,255,0.08);">
+      <h3 style="color: #60a5fa; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 0.75rem 0;">Scaffolding</h3>
+      {% block scaffolding %}
+        <div style="display: flex; flex-direction: column; gap: 0.35rem; min-height: 80px;">
+          {% if scaffolding %}
+            {{ scaffolding }}
+          {% else %}
+            <div style="opacity: 0.4; font-size: 0.8rem; font-style: italic; text-align: center; margin-top: 1rem;">
+              Drag CLI Command here…
+            </div>
+          {% endif %}
+        </div>
+      {% endblock %}
+    </div>
+    <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 1rem; border: 1px solid rgba(255,255,255,0.08);">
+      <h3 style="color: #34d399; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 0.75rem 0;">Database</h3>
+      {% block database %}
+        <div style="display: flex; flex-direction: column; gap: 0.35rem; min-height: 80px;">
+          {% if database %}
+            {{ database }}
+          {% else %}
+            <div style="opacity: 0.4; font-size: 0.8rem; font-style: italic; text-align: center; margin-top: 1rem;">
+              Drag CLI Command here…
+            </div>
+          {% endif %}
+        </div>
+      {% endblock %}
+    </div>
+    <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 1rem; border: 1px solid rgba(255,255,255,0.08);">
+      <h3 style="color: #f59e0b; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 0.75rem 0;">Operations</h3>
+      {% block operations %}
+        <div style="display: flex; flex-direction: column; gap: 0.35rem; min-height: 80px;">
+          {% if operations %}
+            {{ operations }}
+          {% else %}
+            <div style="opacity: 0.4; font-size: 0.8rem; font-style: italic; text-align: center; margin-top: 1rem;">
+              Drag CLI Command here…
+            </div>
+          {% endif %}
+        </div>
+      {% endblock %}
+    </div>
+  </div>
+</div>

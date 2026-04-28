@@ -1,0 +1,47 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Philosophy Cards
+description: Side-by-side philosophy comparison cards for two frameworks.
+status: experimental
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Section Title
+      default: 'A note on'
+    title_gradient:
+      type: string
+      title: Gradient Text
+      default: 'philosophy.'
+    framework_1_name:
+      type: string
+      title: Framework 1 Name
+      default: "Symfony's philosophy"
+    framework_1_color:
+      type: string
+      title: Framework 1 Color
+      default: '#18b2e0'
+    framework_1_tagline:
+      type: string
+      title: Framework 1 Tagline
+      default: 'Explicit, composable, standards-driven.'
+    framework_1_body:
+      type: string
+      title: Framework 1 Body
+      default: 'Every component works on its own. Configuration is external. The DI container is the hub.'
+    framework_2_name:
+      type: string
+      title: Framework 2 Name
+      default: "MonkeysLegion's philosophy"
+    framework_2_color:
+      type: string
+      title: Framework 2 Color
+      default: '#8b5cf6'
+    framework_2_tagline:
+      type: string
+      title: Framework 2 Tagline
+      default: 'Attribute-first, convention over configuration, PHP-native.'
+    framework_2_body:
+      type: string
+      title: Framework 2 Body
+      default: 'Configuration lives next to the code it governs. Providers auto-discover.'
