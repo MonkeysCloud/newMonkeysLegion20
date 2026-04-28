@@ -13,6 +13,24 @@ interface DocContentProps {
   style?: React.CSSProperties;
 }
 
+/** Detect if a string looks like markdown rather than HTML */
+function looksLikeMarkdown(text: string): boolean {
+  // If it starts with an HTML tag, it's probably HTML
+  if (/^\s*<[a-z][\s\S]*>/i.test(text)) return false;
+  // Check for common markdown patterns
+  const mdPatterns = [
+    /^#{1,6}\s+/m,          // headings
+    /\*\*[^*]+\*\*/,         // bold
+    /^[-*+]\s+/m,            // unordered lists
+    /^\d+\.\s+/m,            // ordered lists
+    /^---$/m,                // horizontal rules
+    /```[\s\S]*?```/,        // code blocks
+    /\[.+?\]\(.+?\)/,        // links
+  ];
+  const matches = mdPatterns.filter(p => p.test(text)).length;
+  return matches >= 2;
+}
+
 /**
  * Renders documentation content from Drupal.
  * Uses `react-markdown` for markdown format (with tables, raw HTML, and syntax highlighting),
@@ -21,7 +39,9 @@ interface DocContentProps {
 export default function DocContent({ body, format, className, style }: DocContentProps) {
   if (!body) return null;
 
-  if (format === 'markdown') {
+  const isMarkdown = format === 'markdown' || (!format && looksLikeMarkdown(body));
+
+  if (isMarkdown) {
     return (
       <div className={className} style={style}>
         <ReactMarkdown

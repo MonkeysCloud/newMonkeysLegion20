@@ -119,6 +119,7 @@ export default async function NewsDetailPage({
           {/* Body */}
           <DocContent
             body={post.body}
+            format={post.bodyFormat}
             className="prose"
             style={{
               color: 'var(--color-text-secondary)',
