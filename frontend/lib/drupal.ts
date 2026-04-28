@@ -27,17 +27,36 @@ import type {
   UserProfile,
 } from './types';
 
-/** Convert a Drupal body field to HTML — handles both HTML and Markdown formats */
+/** Convert a Drupal body field to usable content — handles both HTML and Markdown formats */
 function resolveBodyHtml(body: any): string {
   if (!body) return '';
   const format = body.format || 'full_html';
   const raw = String(body.value || '');
   const processed = String(body.processed || '');
+
+  // If Drupal says it's markdown, always use raw
   if (format === 'markdown' && raw) {
-    // Send raw markdown to the client, where react-markdown will render it safely.
     return raw;
   }
+
+  // Auto-detect: if raw value has markdown patterns, return raw so ReactMarkdown can render it
+  if (raw && hasMarkdownPatterns(raw)) {
+    return raw;
+  }
+
   return processed || raw;
+}
+
+/** Quick check for common markdown patterns in text */
+function hasMarkdownPatterns(text: string): boolean {
+  const patterns = [
+    /^#{1,6}\s+/m,       // headings
+    /\*\*[^*]+\*\*/,      // bold
+    /^[-*+]\s+/m,         // unordered lists
+    /^---$/m,             // horizontal rules
+    /```/,                // code blocks
+  ];
+  return patterns.filter(p => p.test(text)).length >= 2;
 }
 
 const DRUPAL_BASE_URL = process.env.DRUPAL_BASE_URL || process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'http://nginx';
