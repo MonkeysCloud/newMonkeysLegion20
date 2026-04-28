@@ -61,6 +61,9 @@ function hasMarkdownPatterns(text: string): boolean {
 
 const DRUPAL_BASE_URL = process.env.DRUPAL_BASE_URL || process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'http://nginx';
 
+/** Public-facing URL for images loaded by the browser (must be HTTPS and publicly accessible) */
+const PUBLIC_CMS_URL = process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'https://cms.monkeyslegion.com';
+
 /* ============================================================================
    Core fetch helper
    ============================================================================ */
@@ -270,10 +273,10 @@ function resolveImageUrl(data: any, node: any): string | undefined {
     if (uri && typeof uri === 'string') {
       // Fix mangled paths from JSON:API (sometimes includes /jsonapi/node/ prefix)
       const cleanUri = uri.replace(/^\/jsonapi\/node\//, '/');
-      // Prepend CMS base URL for relative paths so images load from Drupal
-      if (cleanUri.startsWith('/')) return `${DRUPAL_BASE_URL}${cleanUri}`;
+      // Use public CMS URL so images load in the browser via HTTPS
+      if (cleanUri.startsWith('/')) return `${PUBLIC_CMS_URL}${cleanUri}`;
       if (cleanUri.startsWith('http')) return cleanUri;
-      return `${DRUPAL_BASE_URL}/${cleanUri}`;
+      return `${PUBLIC_CMS_URL}/${cleanUri}`;
     }
   }
 
@@ -287,10 +290,10 @@ function resolveImageUrl(data: any, node: any): string | undefined {
   const attrs = fileEntity.attributes || fileEntity;
   const uri = attrs.uri?.url || attrs.url;
   if (!uri) return undefined;
-  // Prepend CMS base URL for relative paths
-  if (uri.startsWith('/')) return `${DRUPAL_BASE_URL}${uri}`;
+  // Use public CMS URL so images load in the browser via HTTPS
+  if (uri.startsWith('/')) return `${PUBLIC_CMS_URL}${uri}`;
   if (uri.startsWith('http')) return uri;
-  return `${DRUPAL_BASE_URL}/${uri}`;
+  return `${PUBLIC_CMS_URL}/${uri}`;
 }
 
 /** Extract tag names from inline field_tags (flat JSON:API format) or included data */
