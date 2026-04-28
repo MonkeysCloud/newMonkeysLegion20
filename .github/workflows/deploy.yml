@@ -62,6 +62,7 @@ jobs:
             --image=${{ env.AR_REPO }}/ml-cms:${{ github.sha }} \
             --region=${{ env.REGION }} \
             --project=${{ env.PROJECT_ID }} \
+            --set-cloudsql-instances=monkeyslegion:us-central1:ml-mysql \
             --quiet
 
       - name: Deploy Frontend to Cloud Run
