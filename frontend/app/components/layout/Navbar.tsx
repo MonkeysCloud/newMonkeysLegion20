@@ -234,6 +234,33 @@ export default function Navbar({ menuItems = [] }: NavbarProps) {
             )}
 
             <SearchBar compact />
+
+            <a
+              href="https://monkeys.cloud/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontSize: 'var(--text-sm)', fontWeight: 700,
+                color: '#fff', textDecoration: 'none',
+                padding: '0.4rem 1.1rem',
+                borderRadius: 'var(--radius-full)',
+                background: 'linear-gradient(135deg, hsl(250, 85%, 60%), hsl(280, 85%, 55%))',
+                boxShadow: '0 2px 12px hsla(260, 85%, 55%, 0.35)',
+                display: 'flex', alignItems: 'center', gap: '0.4em',
+                transition: 'transform 0.15s, box-shadow 0.15s',
+                whiteSpace: 'nowrap',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translateY(-1px) scale(1.03)';
+                e.currentTarget.style.boxShadow = '0 4px 20px hsla(260, 85%, 55%, 0.5)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                e.currentTarget.style.boxShadow = '0 2px 12px hsla(260, 85%, 55%, 0.35)';
+              }}
+            >
+              🚀 Deploy
+            </a>
           </div>
 
           {/* Mobile Hamburger Toggle */}
