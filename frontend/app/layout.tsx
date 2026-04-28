@@ -72,24 +72,20 @@ export default function RootLayout({
           }}
         />
         {/* Google Analytics */}
-        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-          <>
-            <script
-              async
-              src={`https://www.googletagmanager.com/gtag/js?id=G-VBP6KHVTEY`}
-            />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', 'G-VBP6KHVTEY');
-                `,
-              }}
-            />
-          </>
-        )}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-VBP6KHVTEY"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-VBP6KHVTEY');
+            `,
+          }}
+        />
       </head>
       <body>
         <AuthProvider>
