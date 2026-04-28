@@ -20,7 +20,7 @@ $databases['default']['default'] = [
 
 // Cloud SQL uses Unix socket; local Docker uses TCP host.
 if (str_starts_with($db_host, '/cloudsql/')) {
-  $databases['default']['default']['host'] = 'localhost';
+  $databases['default']['default']['host'] = '';
   $databases['default']['default']['unix_socket'] = $db_host;
 } else {
   $databases['default']['default']['host'] = $db_host;
