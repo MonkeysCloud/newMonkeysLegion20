@@ -3,10 +3,11 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   output: 'standalone',
   images: {
-    domains: [
-      'localhost',
-      'nginx',
-      'monkeyslegion.com',
+    remotePatterns: [
+      { protocol: 'https', hostname: 'cms.monkeyslegion.com' },
+      { protocol: 'https', hostname: '**.run.app' },
+      { protocol: 'http', hostname: 'localhost' },
+      { protocol: 'http', hostname: 'nginx' },
     ],
   },
   async rewrites() {

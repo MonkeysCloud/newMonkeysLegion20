@@ -251,8 +251,10 @@ function resolveImageUrl(data: any, node: any): string | undefined {
     if (uri && typeof uri === 'string') {
       // Fix mangled paths from JSON:API (sometimes includes /jsonapi/node/ prefix)
       const cleanUri = uri.replace(/^\/jsonapi\/node\//, '/');
-      // Return relative path — browser resolves against current domain (localhost)
-      return cleanUri.startsWith('/') ? cleanUri : `/${cleanUri}`;
+      // Prepend CMS base URL for relative paths so images load from Drupal
+      if (cleanUri.startsWith('/')) return `${DRUPAL_BASE_URL}${cleanUri}`;
+      if (cleanUri.startsWith('http')) return cleanUri;
+      return `${DRUPAL_BASE_URL}/${cleanUri}`;
     }
   }
 
@@ -266,7 +268,10 @@ function resolveImageUrl(data: any, node: any): string | undefined {
   const attrs = fileEntity.attributes || fileEntity;
   const uri = attrs.uri?.url || attrs.url;
   if (!uri) return undefined;
-  return uri.startsWith('/') ? uri : `/${uri}`;
+  // Prepend CMS base URL for relative paths
+  if (uri.startsWith('/')) return `${DRUPAL_BASE_URL}${uri}`;
+  if (uri.startsWith('http')) return uri;
+  return `${DRUPAL_BASE_URL}/${uri}`;
 }
 
 /** Extract tag names from inline field_tags (flat JSON:API format) or included data */
