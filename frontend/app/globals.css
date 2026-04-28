@@ -587,6 +587,12 @@ img {
   .doc-sidebar { display: none !important; }
   .doc-main { padding: var(--space-6) var(--space-4); max-width: 100%; }
   .doc-grid { grid-template-columns: 1fr; }
+
+  /* Navbar mobile adjustments */
+  #navbar { padding: var(--space-2) var(--space-4) !important; }
+  #navbar img[alt="MonkeysLegion"] { height: 30px !important; }
+  .navbar-wrapper { top: var(--space-2) !important; }
+  .mobile-drawer-logo { height: 28px !important; }
 }
 
 /* --- Animations --- */

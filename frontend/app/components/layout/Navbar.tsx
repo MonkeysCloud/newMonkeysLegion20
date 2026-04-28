@@ -205,7 +205,7 @@ export default function Navbar({ menuItems = [] }: NavbarProps) {
       <TopBar />
 
       {/* Main pill navbar — offset below topbar (32px) */}
-      <div style={{ position: 'fixed', top: 'calc(32px + var(--space-3))', left: 0, right: 0, zIndex: 1000, display: 'flex', justifyContent: 'center', pointerEvents: 'none' }}>
+      <div className="navbar-wrapper" style={{ position: 'fixed', top: 'calc(32px + var(--space-3))', left: 0, right: 0, zIndex: 1000, display: 'flex', justifyContent: 'center', pointerEvents: 'none' }}>
         <nav id="navbar" className={scrolled ? "glass-nav" : ""} style={{
           pointerEvents: 'auto',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -305,7 +305,7 @@ export default function Navbar({ menuItems = [] }: NavbarProps) {
             borderBottom: '1px solid var(--color-border)',
           }}>
             <a href="/" onClick={() => setMobileMenuOpen(false)} style={{ display: 'flex', alignItems: 'center' }}>
-              <img src="/monkeyslegion-logo.svg" alt="MonkeysLegion" style={{ height: 36 }} />
+              <img src="/monkeyslegion-logo.svg" alt="MonkeysLegion" className="mobile-drawer-logo" style={{ height: 28 }} />
             </a>
             <button
               onClick={() => setMobileMenuOpen(false)}
