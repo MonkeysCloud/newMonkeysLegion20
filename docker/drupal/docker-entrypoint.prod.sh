@@ -52,8 +52,10 @@ fi
 
 cd /var/www/html
 
-# Fix permissions
-chown -R www-data:www-data /var/www/html/web/sites/default/files 2>/dev/null || true
+# Fix permissions for all writable directories
+mkdir -p /var/www/html/web/sites/default/files/php/twig /var/www/html/private /tmp
+chown -R www-data:www-data /var/www/html/web/sites/default/files /var/www/html/private /tmp 2>/dev/null || true
+chmod -R 775 /var/www/html/web/sites/default/files /var/www/html/private 2>/dev/null || true
 
 # Start PHP-FPM in the background FIRST so the container can serve traffic immediately
 echo "→ Starting PHP-FPM..."

@@ -56,8 +56,18 @@ RUN rm -f /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default \
 # Copy our CMS nginx config
 COPY docker/nginx/cms.prod.conf /etc/nginx/conf.d/cms.conf
 
-# Set correct permissions
-RUN chown -R www-data:www-data /var/www/html/web/sites/default/files 2>/dev/null || true
+# Set correct permissions for all Drupal-writable directories
+RUN mkdir -p /var/www/html/web/sites/default/files \
+    /var/www/html/private \
+    /var/www/html/web/sites/default/files/php/twig \
+    /tmp \
+    && chown -R www-data:www-data \
+        /var/www/html/web/sites/default/files \
+        /var/www/html/private \
+        /tmp \
+    && chmod -R 775 \
+        /var/www/html/web/sites/default/files \
+        /var/www/html/private
 
 # Production entrypoint
 COPY docker/drupal/docker-entrypoint.prod.sh /usr/local/bin/docker-entrypoint.sh
