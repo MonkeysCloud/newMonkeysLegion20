@@ -34,10 +34,10 @@ export default async function DocuSlugPage({ params, searchParams }: { params: P
   const vParam = version !== '2.0' ? `?v=${version}` : '';
 
   return (
-    <div style={{ display: 'flex', minHeight: 'calc(100vh - 128px)' }}>
+    <div className="doc-layout">
       <DocSidebar pages={allPages} activeSlug={slug} versions={versions} currentVersion={version} />
 
-      <main style={{ flex: 1, padding: 'var(--space-10) var(--space-10)', maxWidth: 900, overflow: 'auto' }}>
+      <main className="doc-main">
         {/* Header */}
         <div style={{ marginBottom: 'var(--space-8)', paddingBottom: 'var(--space-6)', borderBottom: '1px solid var(--color-border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 'var(--space-2)', flexWrap: 'wrap' }}>

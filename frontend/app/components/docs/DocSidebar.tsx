@@ -22,9 +22,7 @@ export default function DocSidebar({ pages, activeSlug, versions, currentVersion
   }, {} as Record<string, DocPage[]>);
 
   return (
-    <aside style={{
-      width: 280,
-      minWidth: 280,
+    <aside className="doc-sidebar" style={{
       borderRight: '1px solid var(--color-border)',
       background: 'var(--color-bg)',
       padding: 'var(--space-6) 0',
