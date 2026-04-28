@@ -292,38 +292,133 @@ export default function Navbar({ menuItems = [] }: NavbarProps) {
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
         <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 999,
-          background: 'var(--color-bg)',
-          padding: 'var(--space-24) var(--space-6) var(--space-6)',
-          display: 'flex', flexDirection: 'column', gap: 'var(--space-6)',
-          overflowY: 'auto'
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999,
+          background: 'hsla(230, 25%, 6%, 0.98)',
+          backdropFilter: 'blur(20px)',
+          display: 'flex', flexDirection: 'column',
+          animation: 'fadeIn 0.2s ease-out',
         }}>
-          {menuItems.map((item, idx) => (
-            <div key={idx}>
-              {item.children && item.children.length > 0 ? (
-                <div>
-                  <span style={{ fontSize: 'var(--text-xl)', fontWeight: 600, color: 'var(--color-text-muted)', display: 'block', marginBottom: 'var(--space-3)' }}>{item.title}</span>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', paddingLeft: 'var(--space-4)', borderLeft: '2px solid var(--color-border)' }}>
-                    {item.children.map((child, ci) => (
-                      <a key={ci} href={child.url} onClick={() => setMobileMenuOpen(false)} style={{ fontSize: 'var(--text-lg)', fontWeight: 500 }}>
-                        {child.title}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <a href={item.url} onClick={() => setMobileMenuOpen(false)} style={{ fontSize: 'var(--text-xl)', fontWeight: 600, borderBottom: '1px solid var(--color-border)', paddingBottom: 'var(--space-4)' }}>
-                  {item.title}
-                </a>
-              )}
-            </div>
-          ))}
-          <div style={{ marginTop: 'auto' }}>
-            <SearchBar compact />
-            <a href="https://github.com/MonkeysCloud/MonkeysLegion-Skeleton" target="_blank" rel="noopener noreferrer"
-              className="btn btn-secondary w-full" style={{ marginTop: 'var(--space-4)', display: 'block', textAlign: 'center', borderRadius: 'var(--radius-full)' }}>
-              ⭐ View on GitHub
+          {/* Header with logo + close */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: 'var(--space-5) var(--space-6)',
+            borderBottom: '1px solid var(--color-border)',
+          }}>
+            <a href="/" onClick={() => setMobileMenuOpen(false)} style={{ display: 'flex', alignItems: 'center' }}>
+              <img src="/monkeyslegion-logo.svg" alt="MonkeysLegion" style={{ height: 36 }} />
             </a>
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              style={{ background: 'transparent', border: 'none', color: 'var(--color-text)', cursor: 'pointer', padding: 'var(--space-2)' }}
+              aria-label="Close Menu"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Scrollable menu items */}
+          <div style={{
+            flex: 1, overflowY: 'auto',
+            padding: 'var(--space-6) var(--space-6)',
+            display: 'flex', flexDirection: 'column', gap: 'var(--space-2)',
+          }}>
+            {menuItems.map((item, idx) => (
+              <div key={idx}>
+                {item.children && item.children.length > 0 ? (
+                  <div style={{ marginBottom: 'var(--space-4)' }}>
+                    <span style={{
+                      fontSize: 'var(--text-xs)', fontWeight: 700, textTransform: 'uppercase',
+                      letterSpacing: '0.08em', color: 'var(--color-text-muted)',
+                      display: 'block', marginBottom: 'var(--space-2)',
+                      padding: '0 var(--space-3)',
+                    }}>{item.title}</span>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      {item.children.map((child, ci) => (
+                        <a key={ci} href={child.url} onClick={() => setMobileMenuOpen(false)} style={{
+                          fontSize: 'var(--text-base)', fontWeight: 500,
+                          color: 'var(--color-text-secondary)',
+                          textDecoration: 'none',
+                          padding: 'var(--space-3) var(--space-3)',
+                          borderRadius: 'var(--radius-md)',
+                          transition: 'background 0.15s, color 0.15s',
+                        }}
+                          onMouseEnter={e => { e.currentTarget.style.background = 'hsla(250, 85%, 60%, 0.08)'; e.currentTarget.style.color = 'var(--color-text)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--color-text-secondary)'; }}
+                        >
+                          {child.title}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <a href={item.url} onClick={() => setMobileMenuOpen(false)} style={{
+                    fontSize: 'var(--text-base)', fontWeight: 600,
+                    color: 'var(--color-text)',
+                    textDecoration: 'none',
+                    padding: 'var(--space-3) var(--space-3)',
+                    borderRadius: 'var(--radius-md)',
+                    display: 'block',
+                    transition: 'background 0.15s',
+                  }}
+                    onMouseEnter={e => e.currentTarget.style.background = 'hsla(250, 85%, 60%, 0.08)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  >
+                    {item.title}
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom action bar */}
+          <div style={{
+            padding: 'var(--space-5) var(--space-6)',
+            borderTop: '1px solid var(--color-border)',
+            display: 'flex', flexDirection: 'column', gap: 'var(--space-3)',
+          }}>
+            <a href="https://monkeys.cloud/" target="_blank" rel="noopener noreferrer"
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5em',
+                padding: 'var(--space-3) var(--space-5)',
+                borderRadius: 'var(--radius-full)',
+                background: 'linear-gradient(135deg, hsl(250, 85%, 60%), hsl(280, 85%, 55%))',
+                color: '#fff', fontWeight: 700, fontSize: 'var(--text-base)',
+                textDecoration: 'none',
+                boxShadow: '0 4px 20px hsla(260, 85%, 55%, 0.4)',
+              }}
+            >
+              🚀 Deploy
+            </a>
+            <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
+              <a href="https://github.com/MonkeysCloud/MonkeysLegion-Skeleton" target="_blank" rel="noopener noreferrer"
+                style={{
+                  flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4em',
+                  padding: 'var(--space-3)',
+                  borderRadius: 'var(--radius-full)',
+                  border: '1px solid var(--color-border)',
+                  color: 'var(--color-text-secondary)', fontWeight: 600, fontSize: 'var(--text-sm)',
+                  textDecoration: 'none',
+                }}
+              >
+                ⭐ GitHub
+              </a>
+              <a href="/marketplace"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4em',
+                  padding: 'var(--space-3)',
+                  borderRadius: 'var(--radius-full)',
+                  border: '1px solid var(--color-border)',
+                  color: 'var(--color-text-secondary)', fontWeight: 600, fontSize: 'var(--text-sm)',
+                  textDecoration: 'none',
+                }}
+              >
+                📦 Marketplace
+              </a>
+            </div>
           </div>
         </div>
       )}
