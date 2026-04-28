@@ -53,9 +53,11 @@ fi
 
 cd /var/www/html
 
-# Run pending DB updates + cache rebuild
-vendor/bin/drush updatedb -y 2>/dev/null || true
-vendor/bin/drush cr 2>/dev/null || true
+# Run pending DB updates + cache rebuild (with timeout so it doesn't hang container startup)
+echo "→ Running DB updates..."
+timeout 30s vendor/bin/drush updatedb -y || echo "→ Drush updatedb failed or timed out"
+echo "→ Rebuilding cache..."
+timeout 30s vendor/bin/drush cr || echo "→ Drush cr failed or timed out"
 
 # Fix permissions
 chown -R www-data:www-data /var/www/html/web/sites/default/files 2>/dev/null || true
