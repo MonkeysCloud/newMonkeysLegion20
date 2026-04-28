@@ -95,6 +95,7 @@ export default function DocSidebar({ items, currentSlug }: DocSidebarProps) {
 
   return (
     <aside
+      className="doc-sidebar"
       style={{
         position: 'sticky',
         top: 'calc(60px + var(--space-8))',

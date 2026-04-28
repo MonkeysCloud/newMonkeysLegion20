@@ -41,7 +41,7 @@ export default async function DocDetailPage({ params, searchParams }: DocDetailP
     <>
       <Navbar menuItems={menuItems} />
       <main style={{ paddingTop: 'calc(60px + var(--space-8))' }}>
-        <div className="container" style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: 'var(--space-10)', alignItems: 'start' }}>
+        <div className="container doc-grid">
           {/* Sidebar */}
           <DocSidebar items={sidebar} currentSlug={slugStr} />
 
