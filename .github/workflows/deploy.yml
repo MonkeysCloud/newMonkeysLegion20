@@ -72,7 +72,7 @@ jobs:
             --image=${{ env.AR_REPO }}/ml-frontend:${{ github.sha }} \
             --region=${{ env.REGION }} \
             --project=${{ env.PROJECT_ID }} \
-            --update-env-vars NEXT_PUBLIC_DRUPAL_BASE_URL=$CMS_URL \
+            --update-env-vars "DRUPAL_BASE_URL=$CMS_URL,DRUPAL_CLIENT_ID=${{ secrets.DRUPAL_CLIENT_ID }},DRUPAL_CLIENT_SECRET=${{ secrets.DRUPAL_CLIENT_SECRET }}" \
             --quiet
 
       - name: Verify Deployments
