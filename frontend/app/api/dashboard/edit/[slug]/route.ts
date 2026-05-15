@@ -8,7 +8,11 @@ async function updatePackage(request: NextRequest, slug: string) {
 
   try {
     const body = await request.json();
-    const res = await fetch(`${DRUPAL_BASE}/api/marketplace/packages/${slug}`, {
+    const url = `${DRUPAL_BASE}/api/marketplace/packages/${slug}`;
+
+    console.log(`[edit] PUT ${url}`);
+
+    const res = await fetch(url, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -18,9 +22,23 @@ async function updatePackage(request: NextRequest, slug: string) {
       body: JSON.stringify(body),
     });
 
-    const data = await res.json().catch(() => ({ error: 'Invalid response from CMS' }));
+    const text = await res.text();
+    console.log(`[edit] CMS responded: ${res.status} - ${text.substring(0, 300)}`);
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      // CMS returned non-JSON (HTML error page etc.)
+      return NextResponse.json(
+        { error: `CMS error (${res.status}): ${text.substring(0, 200)}` },
+        { status: res.status >= 400 ? res.status : 500 }
+      );
+    }
+
     return NextResponse.json(data, { status: res.status });
-  } catch {
+  } catch (err) {
+    console.error('[edit] Proxy error:', err);
     return NextResponse.json({ error: 'Failed to update package' }, { status: 500 });
   }
 }
@@ -57,7 +75,17 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       },
     });
 
-    const data = await res.json().catch(() => ({ error: 'Invalid response from CMS' }));
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      return NextResponse.json(
+        { error: `CMS error (${res.status})` },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(data, { status: res.status });
   } catch {
     return NextResponse.json({ error: 'Failed to fetch package' }, { status: 500 });
