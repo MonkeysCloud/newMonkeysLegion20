@@ -215,7 +215,8 @@ class MarketplaceController extends ControllerBase {
     }
 
     $description = trim($body['description'] ?? '');
-    if (strlen($description) < 10) {
+    $descPlain = strip_tags($description);
+    if (!empty($description) && strlen($descPlain) < 10) {
       $errors[] = 'Description must be at least 10 characters.';
     }
 
@@ -680,7 +681,8 @@ class MarketplaceController extends ControllerBase {
       if ($node->hasField('field_logo') && !$node->get('field_logo')->isEmpty()) {
         $logoFile = $node->get('field_logo')->entity;
         if ($logoFile) {
-          $data['logoUrl'] = \Drupal::service('file_url_generator')->generateAbsoluteString($logoFile->getFileUri());
+          $url = \Drupal::service('file_url_generator')->generateAbsoluteString($logoFile->getFileUri());
+          $data['logoUrl'] = str_replace('http://', 'https://', $url);
         }
       }
     } catch (\Exception $e) {}
@@ -692,7 +694,8 @@ class MarketplaceController extends ControllerBase {
         foreach ($node->get('field_screenshots') as $item) {
           $file = $item->entity;
           if ($file) {
-            $data['images'][] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+            $url = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+            $data['images'][] = str_replace('http://', 'https://', $url);
           }
         }
       }

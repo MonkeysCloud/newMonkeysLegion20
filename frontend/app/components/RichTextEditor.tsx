@@ -195,7 +195,21 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Write y
           <textarea
             className="rich-editor-source"
             value={rawSource}
-            onChange={(e) => setRawSource(e.target.value)}
+            onChange={(e) => {
+              const v = e.target.value;
+              setRawSource(v);
+              // Update parent immediately so form always has latest content
+              if (mode === 'markdown') {
+                try {
+                  const html = marked.parse(v, { async: false }) as string;
+                  onChange(html);
+                } catch {
+                  onChange(v);
+                }
+              } else {
+                onChange(v);
+              }
+            }}
             placeholder={mode === 'markdown' ? '# Heading\n\nWrite **markdown** here...\n\n- List item\n- Another item\n\n```php\n// Code block\n```' : '<h2>Heading</h2>\n<p>Write HTML here...</p>'}
             style={{ minHeight }}
             spellCheck={false}
