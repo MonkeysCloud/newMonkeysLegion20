@@ -96,10 +96,6 @@ export async function logoutUser(): Promise<void> {
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
   try {
-    // Skip if no session cookie exists (avoids 401 noise in console after logout)
-    if (typeof document !== 'undefined' && !document.cookie.includes('SESS')) {
-      return null;
-    }
     const res = await fetch(`${API_BASE}/api/auth/me`, { credentials: 'include' });
     if (!res.ok) return null;
     const data = await res.json();
