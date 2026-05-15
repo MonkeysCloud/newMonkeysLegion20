@@ -101,11 +101,22 @@ class MarketplaceController extends ControllerBase {
      ========================================================================= */
 
   public function getPackage(string $slug): JsonResponse {
-    $nodes = $this->entityTypeManager()->getStorage('node')->loadByProperties([
-      'type' => 'marketplace_package',
-      'field_slug' => $slug,
-      'status' => 1,
-    ]);
+    $db = \Drupal::database();
+    $nids = [];
+    if ($db->schema()->tableExists('node__field_slug')) {
+      $nids = $db->select('node__field_slug', 'fs')
+        ->fields('fs', ['entity_id'])
+        ->condition('fs.field_slug_value', $slug)
+        ->condition('fs.bundle', 'marketplace_package')
+        ->execute()
+        ->fetchCol();
+    }
+
+    $nodes = [];
+    if (!empty($nids)) {
+      $loaded = Node::loadMultiple($nids);
+      $nodes = array_filter($loaded, fn($n) => $n->isPublished());
+    }
 
     if (empty($nodes)) {
       return new JsonResponse(['error' => 'Package not found'], 404, self::HEADERS);
@@ -219,15 +230,19 @@ class MarketplaceController extends ControllerBase {
     $slug = $body['slug'] ?? $this->generateSlug($title);
 
     try {
-      // Check slug uniqueness
-      $existingCount = $this->entityTypeManager()->getStorage('node')->getQuery()
-        ->condition('type', 'marketplace_package')
-        ->condition('field_slug', $slug)
-        ->accessCheck(FALSE)
-        ->count()
-        ->execute();
-      if ($existingCount > 0) {
-        $slug .= '-' . time();
+      // Check slug uniqueness using direct DB query
+      // (Entity query cache for new fields can be stale on ephemeral Cloud Run instances)
+      $db = \Drupal::database();
+      $table = 'node__field_slug';
+      if ($db->schema()->tableExists($table)) {
+        $existingCount = $db->select($table, 'fs')
+          ->condition('fs.field_slug_value', $slug)
+          ->countQuery()
+          ->execute()
+          ->fetchField();
+        if ((int) $existingCount > 0) {
+          $slug .= '-' . time();
+        }
       }
 
       // Resolve category
@@ -319,11 +334,22 @@ class MarketplaceController extends ControllerBase {
       return new JsonResponse(['error' => 'Authentication required'], 401, self::HEADERS);
     }
 
-    $nodes = $this->entityTypeManager()->getStorage('node')->loadByProperties([
-      'type' => 'marketplace_package',
-      'field_slug' => $slug,
-      'status' => 1,
-    ]);
+    $db = \Drupal::database();
+    $nids = [];
+    if ($db->schema()->tableExists('node__field_slug')) {
+      $nids = $db->select('node__field_slug', 'fs')
+        ->fields('fs', ['entity_id'])
+        ->condition('fs.field_slug_value', $slug)
+        ->condition('fs.bundle', 'marketplace_package')
+        ->execute()
+        ->fetchCol();
+    }
+
+    $nodes = [];
+    if (!empty($nids)) {
+      $loaded = Node::loadMultiple($nids);
+      $nodes = array_filter($loaded, fn($n) => $n->isPublished());
+    }
 
     if (empty($nodes)) {
       return new JsonResponse(['error' => 'Package not found'], 404, self::HEADERS);
