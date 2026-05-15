@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { marked } from 'marked';
 import type { MarketplacePackage } from '@/lib/types';
 import PackageCard from '../../components/marketplace/PackageCard';
 import { useAuth } from '../../components/auth/AuthProvider';
@@ -11,6 +12,23 @@ export default function PackageDetailClient({ pkg }: { pkg: MarketplacePackage }
   const [stars, setStars] = useState(pkg.stars);
   const [starred, setStarred] = useState(false);
   const [starLoading, setStarLoading] = useState(false);
+
+  // Auto-detect markdown vs HTML and render accordingly
+  const renderedDescription = useMemo(() => {
+    const desc = pkg.description;
+    if (!desc) return '';
+
+    // If it already looks like HTML (contains tags), use as-is
+    const hasHtmlTags = /<[a-z][\s\S]*?>/i.test(desc);
+    if (hasHtmlTags) return desc;
+
+    // Otherwise treat as markdown and convert
+    try {
+      return marked.parse(desc, { async: false }) as string;
+    } catch {
+      return desc;
+    }
+  }, [pkg.description]);
 
   const handleStar = async () => {
     if (!isAuthenticated) return;
@@ -65,10 +83,10 @@ export default function PackageDetailClient({ pkg }: { pkg: MarketplacePackage }
       {/* Body */}
       <div className="pkg-detail-body">
         <div>
-          {pkg.description && (
-            <div className="doc-content" dangerouslySetInnerHTML={{ __html: pkg.description }} />
+          {renderedDescription && (
+            <div className="doc-content" dangerouslySetInnerHTML={{ __html: renderedDescription }} />
           )}
-          {!pkg.description && pkg.summary && (
+          {!renderedDescription && pkg.summary && (
             <div className="doc-content"><p>{pkg.summary}</p></div>
           )}
         </div>
