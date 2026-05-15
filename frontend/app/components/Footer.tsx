@@ -44,6 +44,7 @@ interface FooterProps {
 export default function Footer({ menuItems = [] }: FooterProps) {
   return (
     <footer style={{
+      marginTop: 'var(--space-16)',
       padding: 'var(--space-12) 0 var(--space-6)',
       borderTop: '1px solid var(--color-border)',
       background: 'linear-gradient(180deg, var(--color-bg) 0%, hsl(230, 25%, 6%) 100%)',
