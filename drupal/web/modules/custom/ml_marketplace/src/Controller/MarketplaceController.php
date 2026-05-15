@@ -215,44 +215,45 @@ class MarketplaceController extends ControllerBase {
     // Generate slug
     $slug = $body['slug'] ?? $this->generateSlug($title);
 
-    // Check slug uniqueness
-    $existing = $this->entityTypeManager()->getStorage('node')->loadByProperties([
-      'type' => 'marketplace_package',
-      'field_slug' => $slug,
-    ]);
-    if (!empty($existing)) {
-      $slug .= '-' . time();
-    }
-
-    // Resolve category
-    $categoryId = NULL;
-    $categoryName = trim($body['category'] ?? '');
-    if (!empty($categoryName)) {
-      $terms = $this->entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
-        'vid' => 'package_category',
-        'name' => $categoryName,
-      ]);
-      if (!empty($terms)) {
-        $term = reset($terms);
-        $categoryId = $term->id();
+    try {
+      // Check slug uniqueness using entity query
+      $existingCount = $this->entityTypeManager()->getStorage('node')->getQuery()
+        ->condition('type', 'marketplace_package')
+        ->condition('field_slug', $slug)
+        ->accessCheck(FALSE)
+        ->count()
+        ->execute();
+      if ($existingCount > 0) {
+        $slug .= '-' . time();
       }
-      else {
-        // Create new category if allowed
-        $newTerm = Term::create([
+
+      // Resolve category
+      $categoryId = NULL;
+      $categoryName = trim($body['category'] ?? '');
+      if (!empty($categoryName)) {
+        $terms = $this->entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
           'vid' => 'package_category',
           'name' => $categoryName,
         ]);
-        $newTerm->save();
-        $categoryId = $newTerm->id();
+        if (!empty($terms)) {
+          $term = reset($terms);
+          $categoryId = $term->id();
+        }
+        else {
+          $newTerm = Term::create([
+            'vid' => 'package_category',
+            'name' => $categoryName,
+          ]);
+          $newTerm->save();
+          $categoryId = $newTerm->id();
+        }
       }
-    }
 
-    try {
       $fields = [
         'type' => 'marketplace_package',
         'title' => $title,
         'uid' => $user->id(),
-        'status' => 1, // Auto-publish
+        'status' => 1,
         'body' => [
           'value' => $description,
           'format' => 'full_html',
@@ -284,7 +285,11 @@ class MarketplaceController extends ControllerBase {
       // Attach screenshot files if provided
       $screenshotFids = $body['screenshot_fids'] ?? [];
       if (!empty($screenshotFids) && is_array($screenshotFids)) {
-        $fields['field_screenshots'] = array_map(fn($fid) => ['target_id' => (int) $fid], $screenshotFids);
+        $fidsArr = [];
+        foreach ($screenshotFids as $fid) {
+          $fidsArr[] = ['target_id' => (int) $fid];
+        }
+        $fields['field_screenshots'] = $fidsArr;
       }
 
       $node = Node::create($fields);
@@ -297,7 +302,7 @@ class MarketplaceController extends ControllerBase {
     }
     catch (\Exception $e) {
       \Drupal::logger('ml_marketplace')->error('Package creation failed: @msg', ['@msg' => $e->getMessage()]);
-      return new JsonResponse(['errors' => ['Failed to publish package.']], 500, self::HEADERS);
+      return new JsonResponse(['errors' => [$e->getMessage()]], 500, self::HEADERS);
     }
   }
 
