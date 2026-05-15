@@ -442,7 +442,7 @@ class MarketplaceController extends ControllerBase {
     return new JsonResponse([
       'user' => [
         'name' => $account->getAccountName(),
-        'joined' => date('c', $account->getCreatedTime()),
+        'joined' => date('c', (int) $account->getCreatedTime()),
         'packageCount' => count($packages),
         'totalStars' => $totalStars,
       ],
@@ -526,8 +526,8 @@ class MarketplaceController extends ControllerBase {
         'name' => $author ? $author->getAccountName() : 'Unknown',
         'uid' => $author ? (int) $author->id() : 0,
       ],
-      'created' => date('c', $node->getCreatedTime()),
-      'changed' => date('c', $node->getChangedTime()),
+      'created' => date('c', (int) $node->getCreatedTime()),
+      'changed' => date('c', (int) $node->getChangedTime()),
     ];
 
     // Category
