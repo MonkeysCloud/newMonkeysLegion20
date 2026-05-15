@@ -542,7 +542,11 @@ class MarketplaceController extends ControllerBase {
 
     // Full body only on detail
     if ($full) {
-      $data['description'] = $node->get('body')->processed ?? $node->get('body')->value ?? '';
+      if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+        $data['description'] = $node->get('body')->processed ?? $node->get('body')->value ?? '';
+      } else {
+        $data['description'] = '';
+      }
     }
 
     return $data;
