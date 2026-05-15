@@ -186,6 +186,9 @@ class MarketplaceController extends ControllerBase {
       return new JsonResponse(['error' => 'Authentication required'], 401, self::HEADERS);
     }
 
+    // Ensure field definitions are fresh (Cloud Run containers may have stale cache)
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+
     $body = json_decode($request->getContent(), TRUE);
     if (empty($body)) {
       return new JsonResponse(['error' => 'Invalid JSON body'], 400, self::HEADERS);
@@ -216,7 +219,7 @@ class MarketplaceController extends ControllerBase {
     $slug = $body['slug'] ?? $this->generateSlug($title);
 
     try {
-      // Check slug uniqueness using entity query
+      // Check slug uniqueness
       $existingCount = $this->entityTypeManager()->getStorage('node')->getQuery()
         ->condition('type', 'marketplace_package')
         ->condition('field_slug', $slug)
