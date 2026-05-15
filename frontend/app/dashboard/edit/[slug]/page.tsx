@@ -76,6 +76,14 @@ export default function EditPackagePage({ params }: { params: Promise<{ slug: st
           license: pkg.license || 'MIT',
           icon: pkg.icon || '📦',
         });
+        // Pre-populate existing logo
+        if (pkg.logoUrl) {
+          setLogoPreview(pkg.logoUrl);
+        }
+        // Pre-populate existing screenshots
+        if (pkg.images && pkg.images.length > 0) {
+          setImagePreviews(pkg.images);
+        }
         setLoadingPkg(false);
       })
       .catch(() => { setNotFound(true); setLoadingPkg(false); });
