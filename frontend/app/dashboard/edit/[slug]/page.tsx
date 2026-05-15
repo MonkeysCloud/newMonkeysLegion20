@@ -1,11 +1,14 @@
 'use client';
 
 import { useEffect, useState, useRef, use } from 'react';
+import dynamic from 'next/dynamic';
 import { useAuth } from '../../../components/auth/AuthProvider';
 import { useRouter } from 'next/navigation';
 import Navbar from '../../../components/layout/Navbar';
 import Footer from '../../../components/Footer';
 import { useMenuItems } from '@/lib/useMenuItems';
+
+const RichTextEditor = dynamic(() => import('../../../components/RichTextEditor'), { ssr: false });
 
 const LICENSE_OPTIONS = ['MIT', 'Apache-2.0', 'GPL-3.0', 'BSD-3', 'ISC', 'Custom'];
 
@@ -239,8 +242,13 @@ export default function EditPackagePage({ params }: { params: Promise<{ slug: st
 
             {/* Description */}
             <div className="form-group">
-              <label className="form-label">Full Description (HTML supported)</label>
-              <textarea className="form-textarea" placeholder="Detailed description, features, usage examples..." value={form.description} onChange={set('description')} style={{ minHeight: 200 }} />
+              <label className="form-label">Full Description</label>
+              <RichTextEditor
+                value={form.description}
+                onChange={(html) => setForm({ ...form, description: html })}
+                placeholder="Detailed description, features, usage examples..."
+                minHeight={240}
+              />
             </div>
 
             {/* Category */}
