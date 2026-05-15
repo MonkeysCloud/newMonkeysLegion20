@@ -154,7 +154,7 @@ export default function EditPackagePage({ params }: { params: Promise<{ slug: st
       }
 
       const res = await fetch(`/api/dashboard/edit/${slug}`, {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });

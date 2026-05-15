@@ -2,9 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const DRUPAL_BASE = process.env.DRUPAL_BASE_URL || process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'http://nginx';
 
-/** PUT /api/dashboard/edit/[slug] — proxy to Drupal updatePackage */
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+async function updatePackage(request: NextRequest, slug: string) {
   const token = request.cookies.get('ml_auth_token')?.value;
   if (!token) return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
 
@@ -25,6 +23,24 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   } catch {
     return NextResponse.json({ error: 'Failed to update package' }, { status: 500 });
   }
+}
+
+/** PUT /api/dashboard/edit/[slug] */
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  return updatePackage(request, slug);
+}
+
+/** PATCH /api/dashboard/edit/[slug] — alias for PUT */
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  return updatePackage(request, slug);
+}
+
+/** POST /api/dashboard/edit/[slug] — fallback for environments that block PUT */
+export async function POST(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  return updatePackage(request, slug);
 }
 
 /** GET /api/dashboard/edit/[slug] — fetch package details for editing */

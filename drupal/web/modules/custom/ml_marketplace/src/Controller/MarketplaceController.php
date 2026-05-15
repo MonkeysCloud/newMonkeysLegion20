@@ -663,16 +663,38 @@ class MarketplaceController extends ControllerBase {
       ];
     }
 
-    // Full body only on detail
-    if ($full) {
-      $data['description'] = '';
-      try {
-        if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
-          $data['description'] = $node->get('body')->processed ?? $node->get('body')->value ?? '';
+    // Logo URL
+    $data['logoUrl'] = '';
+    try {
+      if ($node->hasField('field_logo') && !$node->get('field_logo')->isEmpty()) {
+        $logoFile = $node->get('field_logo')->entity;
+        if ($logoFile) {
+          $data['logoUrl'] = \Drupal::service('file_url_generator')->generateAbsoluteString($logoFile->getFileUri());
         }
-      } catch (\InvalidArgumentException $e) {
-        // Field does not exist on this entity bundle
       }
+    } catch (\Exception $e) {}
+
+    // Screenshot / gallery images
+    $data['images'] = [];
+    try {
+      if ($node->hasField('field_screenshots') && !$node->get('field_screenshots')->isEmpty()) {
+        foreach ($node->get('field_screenshots') as $item) {
+          $file = $item->entity;
+          if ($file) {
+            $data['images'][] = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+          }
+        }
+      }
+    } catch (\Exception $e) {}
+
+    // Body / description — always include
+    $data['description'] = '';
+    try {
+      if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+        $data['description'] = $node->get('body')->processed ?? $node->get('body')->value ?? '';
+      }
+    } catch (\InvalidArgumentException $e) {
+      // Field does not exist on this entity bundle
     }
 
     return $data;
