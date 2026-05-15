@@ -30,3 +30,4 @@ frontend/out/
 # Database dumps
 dump.sql
 *.sql.gz
+*.sql
