@@ -325,8 +325,131 @@ class MarketplaceController extends ControllerBase {
   }
 
   /* =========================================================================
-     Authenticated: Star / unstar a package
+     Authenticated: Update an existing package
      ========================================================================= */
+
+  public function updatePackage(string $slug, Request $request): JsonResponse {
+    $user = $this->currentUser();
+    if ($user->isAnonymous()) {
+      return new JsonResponse(['error' => 'Authentication required'], 401, self::HEADERS);
+    }
+
+    // Ensure field definitions are fresh
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+
+    // Load the package by slug using direct DB query
+    $db = \Drupal::database();
+    $nids = [];
+    if ($db->schema()->tableExists('node__field_slug')) {
+      $nids = $db->select('node__field_slug', 'fs')
+        ->fields('fs', ['entity_id'])
+        ->condition('fs.field_slug_value', $slug)
+        ->condition('fs.bundle', 'marketplace_package')
+        ->execute()
+        ->fetchCol();
+    }
+
+    if (empty($nids)) {
+      return new JsonResponse(['error' => 'Package not found'], 404, self::HEADERS);
+    }
+
+    $node = Node::load(reset($nids));
+    if (!$node) {
+      return new JsonResponse(['error' => 'Package not found'], 404, self::HEADERS);
+    }
+
+    // Only the author can update
+    if ((int) $node->getOwnerId() !== (int) $user->id()) {
+      return new JsonResponse(['error' => 'You can only edit your own packages'], 403, self::HEADERS);
+    }
+
+    $body = json_decode($request->getContent(), TRUE);
+    if (empty($body)) {
+      return new JsonResponse(['error' => 'Invalid JSON body'], 400, self::HEADERS);
+    }
+
+    try {
+      // Updatable text fields
+      $textFields = [
+        'title' => 'title',
+        'summary' => 'field_summary',
+        'version' => 'field_version',
+        'repo_url' => 'field_repo_url',
+        'docs_url' => 'field_docs_url',
+        'install_command' => 'field_install_command',
+        'composer_install' => 'field_composer_install',
+        'license' => 'field_license',
+        'icon' => 'field_icon',
+      ];
+
+      foreach ($textFields as $bodyKey => $fieldName) {
+        if (isset($body[$bodyKey])) {
+          if ($bodyKey === 'title') {
+            $node->setTitle(trim($body[$bodyKey]));
+          } else {
+            $node->set($fieldName, trim($body[$bodyKey]));
+          }
+        }
+      }
+
+      // Update description (body field)
+      if (isset($body['description'])) {
+        if ($node->hasField('body')) {
+          $node->set('body', [
+            'value' => $body['description'],
+            'format' => 'full_html',
+          ]);
+        }
+      }
+
+      // Update category
+      if (isset($body['category'])) {
+        $categoryName = trim($body['category']);
+        if (!empty($categoryName)) {
+          $terms = $this->entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+            'vid' => 'package_category',
+            'name' => $categoryName,
+          ]);
+          if (!empty($terms)) {
+            $term = reset($terms);
+            $node->set('field_package_category', ['target_id' => $term->id()]);
+          } else {
+            $newTerm = Term::create([
+              'vid' => 'package_category',
+              'name' => $categoryName,
+            ]);
+            $newTerm->save();
+            $node->set('field_package_category', ['target_id' => $newTerm->id()]);
+          }
+        }
+      }
+
+      // Update logo if provided
+      if (isset($body['logo_fid']) && $body['logo_fid']) {
+        $node->set('field_logo', ['target_id' => (int) $body['logo_fid']]);
+      }
+
+      // Update screenshots if provided
+      if (isset($body['screenshot_fids']) && is_array($body['screenshot_fids'])) {
+        $fidsArr = [];
+        foreach ($body['screenshot_fids'] as $fid) {
+          $fidsArr[] = ['target_id' => (int) $fid];
+        }
+        $node->set('field_screenshots', $fidsArr);
+      }
+
+      $node->save();
+
+      return new JsonResponse([
+        'message' => 'Package updated successfully.',
+        'package' => $this->serializePackage($node, TRUE),
+      ], 200, self::HEADERS);
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('ml_marketplace')->error('Package update failed: @msg', ['@msg' => $e->getMessage()]);
+      return new JsonResponse(['errors' => [$e->getMessage()]], 500, self::HEADERS);
+    }
+  }
 
   public function starPackage(string $slug): JsonResponse {
     $user = $this->currentUser();

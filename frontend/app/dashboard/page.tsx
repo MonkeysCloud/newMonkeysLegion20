@@ -105,7 +105,12 @@ export default function DashboardPage() {
                       <td>{pkg.downloads.toLocaleString()}</td>
                       <td>⭐ {pkg.stars}</td>
                       <td>{new Date(pkg.created).toLocaleDateString()}</td>
-                      <td><Link href={`/marketplace/${pkg.slug}`} style={{ color: 'var(--color-primary-light)', fontSize: 'var(--text-sm)' }}>View →</Link></td>
+                      <td>
+                        <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+                          <Link href={`/dashboard/edit/${pkg.slug}`} style={{ color: 'var(--color-warning)', fontSize: 'var(--text-sm)', fontWeight: 500 }}>Edit</Link>
+                          <Link href={`/marketplace/${pkg.slug}`} style={{ color: 'var(--color-primary-light)', fontSize: 'var(--text-sm)' }}>View →</Link>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

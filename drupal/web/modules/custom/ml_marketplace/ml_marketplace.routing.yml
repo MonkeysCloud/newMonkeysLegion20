@@ -75,6 +75,18 @@ ml_marketplace.package_star:
     _auth: ['oauth2']
     no_cache: TRUE
 
+ml_marketplace.package_update:
+  path: '/api/marketplace/packages/{slug}'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\MarketplaceController::updatePackage'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  methods: [PUT, PATCH]
+  options:
+    _format: 'json'
+    _auth: ['oauth2']
+    no_cache: TRUE
+
 ml_marketplace.user_packages:
   path: '/api/marketplace/my-packages'
   defaults:
