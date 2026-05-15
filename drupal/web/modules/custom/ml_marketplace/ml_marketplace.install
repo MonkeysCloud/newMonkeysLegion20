@@ -360,3 +360,28 @@ function ml_marketplace_update_10002() {
     }
   }
 }
+
+/**
+ * Add field_description (text_long with format) to marketplace_package.
+ */
+function ml_marketplace_update_10003() {
+  if (!FieldStorageConfig::loadByName('node', 'field_description')) {
+    FieldStorageConfig::create([
+      'field_name' => 'field_description',
+      'entity_type' => 'node',
+      'type' => 'text_long',
+      'cardinality' => 1,
+      'translatable' => FALSE,
+    ])->save();
+  }
+
+  if (!FieldConfig::loadByName('node', 'marketplace_package', 'field_description')) {
+    FieldConfig::create([
+      'field_name' => 'field_description',
+      'entity_type' => 'node',
+      'bundle' => 'marketplace_package',
+      'label' => 'Full Description',
+      'required' => FALSE,
+    ])->save();
+  }
+}

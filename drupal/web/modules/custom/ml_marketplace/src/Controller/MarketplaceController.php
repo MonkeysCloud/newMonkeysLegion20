@@ -272,7 +272,7 @@ class MarketplaceController extends ControllerBase {
         'title' => $title,
         'uid' => $user->id(),
         'status' => 1,
-        'body' => [
+        'field_description' => [
           'value' => $description,
           'format' => 'full_html',
         ],
@@ -392,14 +392,12 @@ class MarketplaceController extends ControllerBase {
         }
       }
 
-      // Update description (body field)
+      // Update description
       if (isset($body['description'])) {
-        if ($node->hasField('body')) {
-          $node->set('body', [
-            'value' => $body['description'],
-            'format' => 'full_html',
-          ]);
-        }
+        $node->set('field_description', [
+          'value' => $body['description'],
+          'format' => 'full_html',
+        ]);
       }
 
       // Update category
@@ -690,10 +688,10 @@ class MarketplaceController extends ControllerBase {
     // Body / description — always include
     $data['description'] = '';
     try {
-      if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
-        $data['description'] = $node->get('body')->processed ?? $node->get('body')->value ?? '';
+      if ($node->hasField('field_description') && !$node->get('field_description')->isEmpty()) {
+        $data['description'] = $node->get('field_description')->processed ?? $node->get('field_description')->value ?? '';
       }
-    } catch (\InvalidArgumentException $e) {
+    } catch (\Exception $e) {
       // Field does not exist on this entity bundle
     }
 
