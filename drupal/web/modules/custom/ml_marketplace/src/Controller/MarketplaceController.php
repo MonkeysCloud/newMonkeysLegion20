@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\ml_marketplace\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
@@ -267,15 +269,14 @@ class MarketplaceController extends ControllerBase {
         }
       }
 
+      // Ensure field_description exists before using it
+      $this->ensureDescriptionField();
+
       $fields = [
         'type' => 'marketplace_package',
         'title' => $title,
         'uid' => $user->id(),
         'status' => 1,
-        'field_description' => [
-          'value' => $description,
-          'format' => 'full_html',
-        ],
         'field_summary' => $body['summary'] ?? '',
         'field_version' => $version,
         'field_slug' => $slug,
@@ -311,6 +312,15 @@ class MarketplaceController extends ControllerBase {
       }
 
       $node = Node::create($fields);
+
+      // Set description after creation (field may not be in field map at create time)
+      if (!empty($description) && $node->hasField('field_description')) {
+        $node->set('field_description', [
+          'value' => $description,
+          'format' => 'full_html',
+        ]);
+      }
+
       $node->save();
 
       return new JsonResponse([
@@ -394,10 +404,13 @@ class MarketplaceController extends ControllerBase {
 
       // Update description
       if (isset($body['description'])) {
-        $node->set('field_description', [
-          'value' => $body['description'],
-          'format' => 'full_html',
-        ]);
+        $this->ensureDescriptionField();
+        if ($node->hasField('field_description')) {
+          $node->set('field_description', [
+            'value' => $body['description'],
+            'format' => 'full_html',
+          ]);
+        }
       }
 
       // Update category
@@ -706,6 +719,36 @@ class MarketplaceController extends ControllerBase {
     $slug = preg_replace('/[^a-z0-9\-]/', '-', $slug);
     $slug = preg_replace('/-+/', '-', $slug);
     return trim($slug, '-');
+  }
+
+  /**
+   * Ensure field_description exists on marketplace_package.
+   */
+  private function ensureDescriptionField(): void {
+    try {
+      if (!FieldStorageConfig::loadByName('node', 'field_description')) {
+        FieldStorageConfig::create([
+          'field_name' => 'field_description',
+          'entity_type' => 'node',
+          'type' => 'text_long',
+          'cardinality' => 1,
+          'translatable' => FALSE,
+        ])->save();
+      }
+      if (!FieldConfig::loadByName('node', 'marketplace_package', 'field_description')) {
+        FieldConfig::create([
+          'field_name' => 'field_description',
+          'entity_type' => 'node',
+          'bundle' => 'marketplace_package',
+          'label' => 'Full Description',
+          'required' => FALSE,
+        ])->save();
+        // Clear caches so the entity system recognizes the new field
+        \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+      }
+    } catch (\Exception $e) {
+      \Drupal::logger('ml_marketplace')->warning('ensureDescriptionField: @msg', ['@msg' => $e->getMessage()]);
+    }
   }
 
   /* =========================================================================
