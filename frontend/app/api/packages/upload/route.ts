@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const DRUPAL_BASE = process.env.DRUPAL_BASE_URL || process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'http://nginx';
+const PUBLIC_CMS_URL = process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'https://cms.monkeyslegion.com';
 
 /**
  * POST /api/packages/upload
- * Proxies file upload to Drupal. Accepts multipart/form-data with a 'file' field.
+ * Proxies file upload to Drupal via the core file upload REST resource.
+ * Accepts multipart/form-data with a 'file' field.
  * Returns the uploaded file URL.
  */
 export async function POST(request: NextRequest) {
@@ -29,55 +31,61 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
     const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
 
-    // Upload to Drupal via JSON:API file upload
+    // Upload via Drupal's file upload REST resource (core)
+    // Endpoint: POST /file/upload/{entity_type_id}/{bundle}/{field_name}
     const res = await fetch(
-      `${DRUPAL_BASE}/jsonapi/node/marketplace_package/field_logo/`,
+      `${DRUPAL_BASE}/file/upload/node/marketplace_package/field_logo`,
       {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
-          Accept: 'application/vnd.api+json',
           'Content-Type': 'application/octet-stream',
           'Content-Disposition': `file; filename="${filename}"`,
+          Accept: 'application/json',
         },
         body: buffer,
       },
     );
 
-    if (!res.ok) {
-      // Fallback: store via Drupal's custom upload endpoint
-      const fallbackRes = await fetch(`${DRUPAL_BASE}/api/marketplace/upload`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': file.type,
-          'X-Filename': filename,
-        },
-        body: buffer,
-      });
-
-      if (!fallbackRes.ok) {
-        const errText = await fallbackRes.text();
-        console.error('[upload] Drupal error:', errText);
-        return NextResponse.json(
-          { errors: ['File upload failed.'] },
-          { status: 500 },
-        );
+    if (res.ok) {
+      const data = await res.json();
+      const fileUri = data?.uri?.[0]?.url;
+      if (fileUri) {
+        const url = fileUri.startsWith('http') ? fileUri : `${PUBLIC_CMS_URL}${fileUri}`;
+        return NextResponse.json({ url, filename });
       }
-
-      const fallbackData = await fallbackRes.json();
-      return NextResponse.json(fallbackData);
     }
 
-    const data = await res.json();
-    const fileUrl = data?.data?.attributes?.uri?.url || '';
-
-    return NextResponse.json({
-      url: fileUrl ? `${DRUPAL_BASE}${fileUrl}` : '',
-      filename,
+    // Fallback: upload as a generic file entity via JSON:API
+    const fallbackRes = await fetch(`${DRUPAL_BASE}/jsonapi/file/file`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.api+json',
+        'Content-Type': 'application/octet-stream',
+        'Content-Disposition': `file; filename="${filename}"`,
+      },
+      body: buffer,
     });
+
+    if (fallbackRes.ok) {
+      const fbData = await fallbackRes.json();
+      const fileUri = fbData?.data?.attributes?.uri?.url;
+      if (fileUri) {
+        const url = fileUri.startsWith('http') ? fileUri : `${PUBLIC_CMS_URL}${fileUri}`;
+        return NextResponse.json({ url, filename });
+      }
+    }
+
+    // Log the actual error for debugging
+    const errText = await (res.ok ? fallbackRes : res).text();
+    console.error('[packages/upload] Drupal error:', res.status, errText);
+    return NextResponse.json(
+      { errors: ['File upload failed.'] },
+      { status: 500 },
+    );
   } catch (err) {
-    console.error('[upload] Error:', err);
+    console.error('[packages/upload] Error:', err);
     return NextResponse.json(
       { errors: ['Internal server error.'] },
       { status: 500 },
