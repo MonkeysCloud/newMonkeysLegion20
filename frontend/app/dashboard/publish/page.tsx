@@ -77,13 +77,13 @@ export default function PublishPage() {
     setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
-  const uploadFile = async (file: File): Promise<string> => {
+  const uploadFile = async (file: File): Promise<{ url: string; fid: number }> => {
     const fd = new FormData();
     fd.append('file', file);
     const res = await fetch('/api/packages/upload', { method: 'POST', body: fd });
     if (!res.ok) throw new Error('Upload failed');
     const data = await res.json();
-    return data.url || '';
+    return { url: data.url || '', fid: data.fid || 0 };
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -99,14 +99,24 @@ export default function PublishPage() {
     try {
       // Upload logo if provided
       let logoUrl = '';
+      let logoFid = 0;
       if (logoFile) {
-        try { logoUrl = await uploadFile(logoFile); } catch { /* continue without logo */ }
+        try {
+          const result = await uploadFile(logoFile);
+          logoUrl = result.url;
+          logoFid = result.fid;
+        } catch { /* continue without logo */ }
       }
 
       // Upload gallery images
       const imageUrls: string[] = [];
+      const screenshotFids: number[] = [];
       for (const img of imageFiles) {
-        try { imageUrls.push(await uploadFile(img)); } catch { /* skip */ }
+        try {
+          const result = await uploadFile(img);
+          imageUrls.push(result.url);
+          if (result.fid) screenshotFids.push(result.fid);
+        } catch { /* skip */ }
       }
 
       const categoryName = form.category;
@@ -118,7 +128,9 @@ export default function PublishPage() {
           ...form,
           category: categoryName,
           logo_url: logoUrl,
+          logo_fid: logoFid,
           images: imageUrls,
+          screenshot_fids: screenshotFids,
         }),
       });
 

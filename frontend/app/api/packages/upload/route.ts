@@ -5,9 +5,9 @@ const PUBLIC_CMS_URL = process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || 'https://cms.m
 
 /**
  * POST /api/packages/upload
- * Proxies file upload to Drupal via the core file upload REST resource.
+ * Proxies file upload to Drupal's custom marketplace upload endpoint.
  * Accepts multipart/form-data with a 'file' field.
- * Returns the uploaded file URL.
+ * Returns the uploaded file URL and fid.
  */
 export async function POST(request: NextRequest) {
   const token = request.cookies.get('ml_auth_token')?.value;
@@ -27,63 +27,43 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ errors: ['No file provided.'] }, { status: 422 });
     }
 
-    // Read file as buffer
     const buffer = Buffer.from(await file.arrayBuffer());
     const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
 
-    // Upload via Drupal's file upload REST resource (core)
-    // Endpoint: POST /file/upload/{entity_type_id}/{bundle}/{field_name}
-    const res = await fetch(
-      `${DRUPAL_BASE}/file/upload/node/marketplace_package/field_logo`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/octet-stream',
-          'Content-Disposition': `file; filename="${filename}"`,
-          Accept: 'application/json',
-        },
-        body: buffer,
-      },
-    );
-
-    if (res.ok) {
-      const data = await res.json();
-      const fileUri = data?.uri?.[0]?.url;
-      if (fileUri) {
-        const url = fileUri.startsWith('http') ? fileUri : `${PUBLIC_CMS_URL}${fileUri}`;
-        return NextResponse.json({ url, filename });
-      }
-    }
-
-    // Fallback: upload as a generic file entity via JSON:API
-    const fallbackRes = await fetch(`${DRUPAL_BASE}/jsonapi/file/file`, {
+    // Upload to Drupal's custom marketplace upload endpoint
+    const res = await fetch(`${DRUPAL_BASE}/api/marketplace/upload`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.api+json',
         'Content-Type': 'application/octet-stream',
-        'Content-Disposition': `file; filename="${filename}"`,
+        'X-Filename': filename,
       },
       body: buffer,
     });
 
-    if (fallbackRes.ok) {
-      const fbData = await fallbackRes.json();
-      const fileUri = fbData?.data?.attributes?.uri?.url;
-      if (fileUri) {
-        const url = fileUri.startsWith('http') ? fileUri : `${PUBLIC_CMS_URL}${fileUri}`;
-        return NextResponse.json({ url, filename });
-      }
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error('[packages/upload] Drupal error:', res.status, errText);
+      return NextResponse.json(
+        { errors: ['File upload failed.'] },
+        { status: res.status },
+      );
     }
 
-    // Log the actual error for debugging
-    const errText = await (res.ok ? fallbackRes : res).text();
-    console.error('[packages/upload] Drupal error:', res.status, errText);
-    return NextResponse.json(
-      { errors: ['File upload failed.'] },
-      { status: 500 },
-    );
+    const data = await res.json();
+
+    // Rewrite internal URL to public CMS URL
+    let url = data.url || '';
+    if (url && !url.startsWith('https://cms.')) {
+      const path = url.replace(/^https?:\/\/[^/]+/, '');
+      url = `${PUBLIC_CMS_URL}${path}`;
+    }
+
+    return NextResponse.json({
+      url,
+      fid: data.fid,
+      filename: data.filename || filename,
+    });
   } catch (err) {
     console.error('[packages/upload] Error:', err);
     return NextResponse.json(

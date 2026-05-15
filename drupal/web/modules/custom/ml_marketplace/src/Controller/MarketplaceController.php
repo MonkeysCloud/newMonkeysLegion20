@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\ml_marketplace\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -274,6 +275,18 @@ class MarketplaceController extends ControllerBase {
         $fields['field_package_category'] = ['target_id' => $categoryId];
       }
 
+      // Attach logo file if provided
+      $logoFid = $body['logo_fid'] ?? NULL;
+      if ($logoFid) {
+        $fields['field_logo'] = ['target_id' => (int) $logoFid];
+      }
+
+      // Attach screenshot files if provided
+      $screenshotFids = $body['screenshot_fids'] ?? [];
+      if (!empty($screenshotFids) && is_array($screenshotFids)) {
+        $fields['field_screenshots'] = array_map(fn($fid) => ['target_id' => (int) $fid], $screenshotFids);
+      }
+
       $node = Node::create($fields);
       $node->save();
 
@@ -509,6 +522,70 @@ class MarketplaceController extends ControllerBase {
     $slug = preg_replace('/[^a-z0-9\-]/', '-', $slug);
     $slug = preg_replace('/-+/', '-', $slug);
     return trim($slug, '-');
+  }
+
+  /* =========================================================================
+     File Upload
+     ========================================================================= */
+
+  /**
+   * Upload a file and return its fid and URL.
+   */
+  public function uploadFile(Request $request): JsonResponse {
+    $user = $this->currentUser();
+    if ($user->isAnonymous()) {
+      return new JsonResponse(['error' => 'Authentication required'], 401, self::HEADERS);
+    }
+
+    $content = $request->getContent();
+    if (empty($content)) {
+      return new JsonResponse(['error' => 'No file data received.'], 400, self::HEADERS);
+    }
+
+    // Get filename from Content-Disposition header or X-Filename
+    $filename = $request->headers->get('X-Filename', '');
+    if (empty($filename)) {
+      $disposition = $request->headers->get('Content-Disposition', '');
+      if (preg_match('/filename="?([^"]+)"?/', $disposition, $m)) {
+        $filename = $m[1];
+      }
+    }
+    if (empty($filename)) {
+      $filename = 'upload-' . time() . '.png';
+    }
+
+    // Sanitize filename
+    $filename = preg_replace('/[^a-zA-Z0-9._-]/', '_', $filename);
+
+    try {
+      $directory = 'public://marketplace';
+      /** @var \Drupal\Core\File\FileSystemInterface $fileSystem */
+      $fileSystem = \Drupal::service('file_system');
+      $fileSystem->prepareDirectory($directory, $fileSystem::CREATE_DIRECTORY | $fileSystem::MODIFY_PERMISSIONS);
+
+      $destination = $directory . '/' . $filename;
+      $uri = $fileSystem->saveData($content, $destination, $fileSystem::EXISTS_RENAME);
+
+      $file = File::create([
+        'uri' => $uri,
+        'uid' => $user->id(),
+        'status' => 1,
+        'filename' => $filename,
+      ]);
+      $file->save();
+
+      $url = \Drupal::service('file_url_generator')->generateAbsoluteString($uri);
+
+      return new JsonResponse([
+        'fid' => (int) $file->id(),
+        'url' => $url,
+        'filename' => $file->getFilename(),
+      ], 201, self::HEADERS);
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('ml_marketplace')->error('File upload failed: @msg', ['@msg' => $e->getMessage()]);
+      return new JsonResponse(['error' => 'File upload failed.'], 500, self::HEADERS);
+    }
   }
 
 }

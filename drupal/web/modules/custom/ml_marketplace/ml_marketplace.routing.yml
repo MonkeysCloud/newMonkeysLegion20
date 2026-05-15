@@ -173,3 +173,16 @@ ml_marketplace.search_users:
     _format: 'json'
     no_cache: TRUE
 
+# ===========================================================================
+# File Upload
+# ===========================================================================
+ml_marketplace.upload:
+  path: '/api/marketplace/upload'
+  defaults:
+    _controller: '\Drupal\ml_marketplace\Controller\MarketplaceController::uploadFile'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  methods: [POST]
+  options:
+    _auth: ['oauth2']
+    no_cache: TRUE
