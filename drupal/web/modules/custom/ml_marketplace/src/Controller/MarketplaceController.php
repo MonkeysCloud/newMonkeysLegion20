@@ -542,10 +542,13 @@ class MarketplaceController extends ControllerBase {
 
     // Full body only on detail
     if ($full) {
-      if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
-        $data['description'] = $node->get('body')->processed ?? $node->get('body')->value ?? '';
-      } else {
-        $data['description'] = '';
+      $data['description'] = '';
+      try {
+        if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+          $data['description'] = $node->get('body')->processed ?? $node->get('body')->value ?? '';
+        }
+      } catch (\InvalidArgumentException $e) {
+        // Field does not exist on this entity bundle
       }
     }
 
