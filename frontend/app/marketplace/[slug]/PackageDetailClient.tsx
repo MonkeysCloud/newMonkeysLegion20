@@ -15,14 +15,39 @@ export default function PackageDetailClient({ pkg }: { pkg: MarketplacePackage }
 
   // Auto-detect markdown vs HTML and render accordingly
   const renderedDescription = useMemo(() => {
-    const desc = pkg.description;
+    let desc = pkg.description;
     if (!desc) return '';
 
-    // If it already looks like HTML (contains tags), use as-is
-    const hasHtmlTags = /<[a-z][\s\S]*?>/i.test(desc);
+    // If description is wrapped in <pre><code>…</code></pre>, extract inner text
+    // This happens when markdown is pasted into a code block in the editor
+    const preCodeMatch = desc.match(/^<pre[^>]*>\s*<code>([\s\S]*?)<\/code>\s*<\/pre>$/i);
+    if (preCodeMatch) {
+      desc = preCodeMatch[1]
+        .replace(/&gt;/g, '>')
+        .replace(/&lt;/g, '<')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/\\n/g, '\n');
+    }
+
+    // Check if the (possibly extracted) content looks like markdown
+    const markdownPatterns = /^#{1,6}\s|^\*\*|^\|.*\||\[!\[|^>\s|^-\s|^```/m;
+    const isLikelyMarkdown = markdownPatterns.test(desc);
+
+    if (isLikelyMarkdown) {
+      try {
+        return marked.parse(desc, { async: false }) as string;
+      } catch {
+        return desc;
+      }
+    }
+
+    // If it has real HTML structure (not just a pre wrapper), use as-is
+    const hasHtmlTags = /<(?:p|h[1-6]|ul|ol|div|section|article|blockquote)\b/i.test(desc);
     if (hasHtmlTags) return desc;
 
-    // Otherwise treat as markdown and convert
+    // Fallback: try markdown conversion anyway
     try {
       return marked.parse(desc, { async: false }) as string;
     } catch {
