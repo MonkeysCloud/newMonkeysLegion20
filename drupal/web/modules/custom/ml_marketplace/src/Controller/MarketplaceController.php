@@ -451,12 +451,17 @@ class MarketplaceController extends ControllerBase {
       // Update logo if provided
       if (isset($body['logo_fid']) && $body['logo_fid']) {
         $node->set('field_logo', ['target_id' => (int) $body['logo_fid']]);
+      } elseif (isset($body['logo_fid']) && $body['logo_fid'] === 0) {
+        // Explicitly clear logo file reference
+        if ($node->hasField('field_logo')) {
+          $node->set('field_logo', NULL);
+        }
       }
 
-      // Update GCS logo URL
-      if (isset($body['logo_url']) && $body['logo_url']) {
+      // Update GCS logo URL (empty string = clear)
+      if (array_key_exists('logo_url', $body)) {
         if ($node->hasField('field_logo_url')) {
-          $node->set('field_logo_url', $body['logo_url']);
+          $node->set('field_logo_url', $body['logo_url'] ?: NULL);
         }
       }
 
@@ -469,10 +474,11 @@ class MarketplaceController extends ControllerBase {
         $node->set('field_screenshots', $fidsArr);
       }
 
-      // Update GCS screenshot URLs
-      if (isset($body['screenshot_urls']) && is_array($body['screenshot_urls'])) {
+      // Update GCS screenshot URLs (always update when key is present)
+      if (array_key_exists('screenshot_urls', $body) && is_array($body['screenshot_urls'])) {
         if ($node->hasField('field_screenshot_urls')) {
-          $node->set('field_screenshot_urls', implode("\n", $body['screenshot_urls']));
+          $urls = array_filter($body['screenshot_urls']);
+          $node->set('field_screenshot_urls', !empty($urls) ? implode("\n", $urls) : NULL);
         }
       }
 

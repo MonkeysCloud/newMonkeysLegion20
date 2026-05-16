@@ -42,8 +42,11 @@ export default function EditPackagePage({ params }: { params: Promise<{ slug: st
   // Image uploads
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [logoRemoved, setLogoRemoved] = useState(false);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  // Track which previews are existing GCS URLs vs new blob URLs
+  const [existingImageUrls, setExistingImageUrls] = useState<string[]>([]);
   const logoRef = useRef<HTMLInputElement>(null);
   const imagesRef = useRef<HTMLInputElement>(null);
 
@@ -83,6 +86,7 @@ export default function EditPackagePage({ params }: { params: Promise<{ slug: st
         // Pre-populate existing screenshots
         if (pkg.images && pkg.images.length > 0) {
           setImagePreviews(pkg.images);
+          setExistingImageUrls(pkg.images);
         }
         setLoadingPkg(false);
       })
@@ -112,7 +116,15 @@ export default function EditPackagePage({ params }: { params: Promise<{ slug: st
   };
 
   const removeImage = (index: number) => {
-    setImageFiles(prev => prev.filter((_, i) => i !== index));
+    // If removing an existing (GCS) image, also remove from existingImageUrls
+    const removedSrc = imagePreviews[index];
+    if (existingImageUrls.includes(removedSrc)) {
+      setExistingImageUrls(prev => prev.filter(u => u !== removedSrc));
+    } else {
+      // It's a new file — remove from imageFiles
+      const newFileIndex = index - existingImageUrls.filter(u => imagePreviews.slice(0, index).includes(u)).length;
+      setImageFiles(prev => prev.filter((_, i) => i !== newFileIndex));
+    }
     setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
@@ -139,7 +151,11 @@ export default function EditPackagePage({ params }: { params: Promise<{ slug: st
     try {
       const payload: Record<string, unknown> = { ...form };
 
-      // Upload logo if a new one was selected
+      // Handle logo: if removed, explicitly clear; if new file, upload
+      if (logoRemoved && !logoFile) {
+        payload.logo_url = '';
+        payload.logo_fid = 0;
+      }
       if (logoFile) {
         try {
           const result = await uploadFile(logoFile);
@@ -148,23 +164,20 @@ export default function EditPackagePage({ params }: { params: Promise<{ slug: st
         } catch { /* continue without logo */ }
       }
 
-      // Upload gallery images if new ones were added
-      if (imageFiles.length > 0) {
-        const screenshotFids: number[] = [];
-        const screenshotUrls: string[] = [];
-        for (const img of imageFiles) {
-          try {
-            const result = await uploadFile(img);
-            if (result.fid) screenshotFids.push(result.fid);
-            if (result.url) screenshotUrls.push(result.url);
-          } catch { /* skip */ }
-        }
-        if (screenshotFids.length > 0) {
-          payload.screenshot_fids = screenshotFids;
-        }
-        if (screenshotUrls.length > 0) {
-          payload.screenshot_urls = screenshotUrls;
-        }
+      // Build final screenshot URLs: existing (non-removed) + newly uploaded
+      const finalScreenshotUrls: string[] = [...existingImageUrls];
+      const newScreenshotFids: number[] = [];
+      for (const img of imageFiles) {
+        try {
+          const result = await uploadFile(img);
+          if (result.url) finalScreenshotUrls.push(result.url);
+          if (result.fid) newScreenshotFids.push(result.fid);
+        } catch { /* skip */ }
+      }
+      // Always send the full list so Drupal knows the current state
+      payload.screenshot_urls = finalScreenshotUrls;
+      if (newScreenshotFids.length > 0) {
+        payload.screenshot_fids = newScreenshotFids;
       }
 
       const res = await fetch(`/api/dashboard/edit/${slug}`, {
@@ -291,6 +304,12 @@ export default function EditPackagePage({ params }: { params: Promise<{ slug: st
                   </div>
                 )}
               </div>
+              {logoPreview && (
+                <button type="button" onClick={(e) => { e.stopPropagation(); setLogoPreview(null); setLogoFile(null); setLogoRemoved(true); }}
+                  style={{ marginTop: 'var(--space-2)', background: 'var(--color-danger)', color: 'white', border: 'none', padding: 'var(--space-1) var(--space-3)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: 'var(--text-sm)' }}>
+                  🗑️ Remove Logo
+                </button>
+              )}
               <input ref={logoRef} type="file" accept="image/*" onChange={handleLogoChange} style={{ display: 'none' }} />
             </div>
 
