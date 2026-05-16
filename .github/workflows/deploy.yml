@@ -63,6 +63,13 @@ jobs:
             --region=${{ env.REGION }} \
             --project=${{ env.PROJECT_ID }} \
             --set-cloudsql-instances=monkeyslegion:us-central1:ml-mysql \
+            --memory=4Gi \
+            --cpu=4 \
+            --concurrency=40 \
+            --min-instances=2 \
+            --max-instances=10 \
+            --cpu-boost \
+            --no-cpu-throttling \
             --quiet
 
       - name: Deploy Frontend to Cloud Run
