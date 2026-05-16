@@ -144,20 +144,26 @@ export default function EditPackagePage({ params }: { params: Promise<{ slug: st
         try {
           const result = await uploadFile(logoFile);
           payload.logo_fid = result.fid;
+          payload.logo_url = result.url;
         } catch { /* continue without logo */ }
       }
 
       // Upload gallery images if new ones were added
       if (imageFiles.length > 0) {
         const screenshotFids: number[] = [];
+        const screenshotUrls: string[] = [];
         for (const img of imageFiles) {
           try {
             const result = await uploadFile(img);
             if (result.fid) screenshotFids.push(result.fid);
+            if (result.url) screenshotUrls.push(result.url);
           } catch { /* skip */ }
         }
         if (screenshotFids.length > 0) {
           payload.screenshot_fids = screenshotFids;
+        }
+        if (screenshotUrls.length > 0) {
+          payload.screenshot_urls = screenshotUrls;
         }
       }
 

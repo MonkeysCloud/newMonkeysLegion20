@@ -132,7 +132,7 @@ export default function PublishPage() {
           category: categoryName,
           logo_url: logoUrl,
           logo_fid: logoFid,
-          images: imageUrls,
+          screenshot_urls: imageUrls,
           screenshot_fids: screenshotFids,
         }),
       });

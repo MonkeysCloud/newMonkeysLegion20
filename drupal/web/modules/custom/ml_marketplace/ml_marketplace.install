@@ -385,3 +385,41 @@ function ml_marketplace_update_10003() {
     ])->save();
   }
 }
+
+/**
+ * Add field_logo_url and field_screenshot_urls for persistent GCS storage.
+ */
+function ml_marketplace_update_10004() {
+  $fields = [
+    'field_logo_url' => [
+      'type' => 'string',
+      'label' => 'Logo URL (GCS)',
+    ],
+    'field_screenshot_urls' => [
+      'type' => 'text_long',
+      'label' => 'Screenshot URLs (GCS, newline-separated)',
+    ],
+  ];
+
+  foreach ($fields as $fieldName => $def) {
+    if (!FieldStorageConfig::loadByName('node', $fieldName)) {
+      FieldStorageConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => 'node',
+        'type' => $def['type'],
+        'cardinality' => 1,
+        'translatable' => FALSE,
+      ])->save();
+    }
+
+    if (!FieldConfig::loadByName('node', 'marketplace_package', $fieldName)) {
+      FieldConfig::create([
+        'field_name' => $fieldName,
+        'entity_type' => 'node',
+        'bundle' => 'marketplace_package',
+        'label' => $def['label'],
+        'required' => FALSE,
+      ])->save();
+    }
+  }
+}

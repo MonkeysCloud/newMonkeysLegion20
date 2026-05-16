@@ -302,6 +302,12 @@ class MarketplaceController extends ControllerBase {
         $fields['field_logo'] = ['target_id' => (int) $logoFid];
       }
 
+      // Store GCS logo URL if provided
+      $logoUrl = $body['logo_url'] ?? '';
+      if (!empty($logoUrl)) {
+        $fields['field_logo_url'] = $logoUrl;
+      }
+
       // Attach screenshot files if provided
       $screenshotFids = $body['screenshot_fids'] ?? [];
       if (!empty($screenshotFids) && is_array($screenshotFids)) {
@@ -310,6 +316,12 @@ class MarketplaceController extends ControllerBase {
           $fidsArr[] = ['target_id' => (int) $fid];
         }
         $fields['field_screenshots'] = $fidsArr;
+      }
+
+      // Store GCS screenshot URLs if provided
+      $screenshotUrls = $body['screenshot_urls'] ?? [];
+      if (!empty($screenshotUrls) && is_array($screenshotUrls)) {
+        $fields['field_screenshot_urls'] = implode("\n", $screenshotUrls);
       }
 
       $node = Node::create($fields);
@@ -441,6 +453,13 @@ class MarketplaceController extends ControllerBase {
         $node->set('field_logo', ['target_id' => (int) $body['logo_fid']]);
       }
 
+      // Update GCS logo URL
+      if (isset($body['logo_url']) && $body['logo_url']) {
+        if ($node->hasField('field_logo_url')) {
+          $node->set('field_logo_url', $body['logo_url']);
+        }
+      }
+
       // Update screenshots if provided
       if (isset($body['screenshot_fids']) && is_array($body['screenshot_fids'])) {
         $fidsArr = [];
@@ -448,6 +467,13 @@ class MarketplaceController extends ControllerBase {
           $fidsArr[] = ['target_id' => (int) $fid];
         }
         $node->set('field_screenshots', $fidsArr);
+      }
+
+      // Update GCS screenshot URLs
+      if (isset($body['screenshot_urls']) && is_array($body['screenshot_urls'])) {
+        if ($node->hasField('field_screenshot_urls')) {
+          $node->set('field_screenshot_urls', implode("\n", $body['screenshot_urls']));
+        }
       }
 
       $node->save();
@@ -675,10 +701,12 @@ class MarketplaceController extends ControllerBase {
       ];
     }
 
-    // Logo URL
+    // Logo URL — prefer GCS URL field, fall back to file entity
     $data['logoUrl'] = '';
     try {
-      if ($node->hasField('field_logo') && !$node->get('field_logo')->isEmpty()) {
+      if ($node->hasField('field_logo_url') && !$node->get('field_logo_url')->isEmpty()) {
+        $data['logoUrl'] = $node->get('field_logo_url')->value;
+      } elseif ($node->hasField('field_logo') && !$node->get('field_logo')->isEmpty()) {
         $logoFile = $node->get('field_logo')->entity;
         if ($logoFile) {
           $url = \Drupal::service('file_url_generator')->generateAbsoluteString($logoFile->getFileUri());
@@ -687,10 +715,13 @@ class MarketplaceController extends ControllerBase {
       }
     } catch (\Exception $e) {}
 
-    // Screenshot / gallery images
+    // Screenshot / gallery images — prefer GCS URLs, fall back to file entities
     $data['images'] = [];
     try {
-      if ($node->hasField('field_screenshots') && !$node->get('field_screenshots')->isEmpty()) {
+      if ($node->hasField('field_screenshot_urls') && !$node->get('field_screenshot_urls')->isEmpty()) {
+        $urlsStr = $node->get('field_screenshot_urls')->value;
+        $data['images'] = array_filter(array_map('trim', explode("\n", $urlsStr)));
+      } elseif ($node->hasField('field_screenshots') && !$node->get('field_screenshots')->isEmpty()) {
         foreach ($node->get('field_screenshots') as $item) {
           $file = $item->entity;
           if ($file) {
