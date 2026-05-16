@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import type { MarketplacePackage, PackageCategory } from '@/lib/types';
 import PackageCard from '../components/marketplace/PackageCard';
 import CategoryFilter from '../components/marketplace/CategoryFilter';
@@ -31,36 +31,21 @@ export default function MarketplaceClient({ initialPackages, initialTotal, categ
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const fetchPackages = useCallback(async (params: Record<string, string>) => {
-    setLoading(true);
-    const qs = new URLSearchParams(params).toString();
-    try {
-      const res = await fetch(`/api/search?type=marketplace&${qs}`);
-      // Fallback: direct to Drupal via our proxy
-      const drupalRes = await fetch(`/jsonapi/node/marketplace_package?sort=-created`);
-      // Use our custom API
-      const apiUrl = `/api/marketplace-proxy?${qs}`;
-      // Simplify: use the server-side function via a simple endpoint
-      const response = await fetch(`${window.location.origin}/api/marketplace?${qs}`);
-      if (response.ok) {
-        const data = await response.json();
-        setPackages(data.packages || []);
-        setTotal(data.total || 0);
-      }
-    } catch {
-      // Keep current state
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  // Auto-suggestions state
+  const [suggestions, setSuggestions] = useState<MarketplacePackage[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(false);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
-  const doSearch = useCallback(async () => {
+  const doSearch = useCallback(async (overrides?: Record<string, string>) => {
     const params: Record<string, string> = {};
-    if (search) params.search = search;
-    if (category) params.category = category;
-    if (license) params.license = license;
-    if (sort) params.sort = sort;
-    params.page = String(page);
+    const s = overrides?.search ?? search;
+    if (s) params.search = s;
+    if (overrides?.category ?? category) params.category = (overrides?.category ?? category)!;
+    if (overrides?.license ?? license) params.license = (overrides?.license ?? license)!;
+    params.sort = overrides?.sort ?? sort;
+    params.page = overrides?.page ?? String(page);
 
     setLoading(true);
     try {
@@ -75,22 +60,58 @@ export default function MarketplaceClient({ initialPackages, initialTotal, categ
     finally { setLoading(false); }
   }, [search, category, license, sort, page]);
 
+  // Debounced auto-suggestions
+  const fetchSuggestions = useCallback(async (query: string) => {
+    if (query.length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    setSuggestionsLoading(true);
+    try {
+      const res = await fetch(`/api/marketplace?search=${encodeURIComponent(query)}&page=0`);
+      if (res.ok) {
+        const data = await res.json();
+        setSuggestions((data.packages || []).slice(0, 5));
+        setShowSuggestions(true);
+      }
+    } catch { /* ignore */ }
+    finally { setSuggestionsLoading(false); }
+  }, []);
+
   const handleSearch = (value: string) => {
     setSearch(value);
     setPage(0);
-    // Debounced search would go here in production
+
+    // Debounce suggestions
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      fetchSuggestions(value);
+    }, 300);
   };
+
+  // Close suggestions on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleCategoryChange = (cat: string | null) => {
     setCategory(cat);
     setPage(0);
-    setTimeout(doSearch, 50);
+    setTimeout(() => doSearch({ category: cat || '' }), 50);
   };
 
   const handleSortChange = (s: string) => {
     setSort(s);
     setPage(0);
-    setTimeout(doSearch, 50);
+    setTimeout(() => doSearch({ sort: s }), 50);
   };
 
   const totalPages = Math.ceil(total / 12);
@@ -104,15 +125,46 @@ export default function MarketplaceClient({ initialPackages, initialTotal, categ
           <h1>Discover <span className="text-gradient">Packages</span></h1>
           <p>Browse community packages, tools, and extensions for the MonkeysLegion ecosystem.</p>
 
-          <div className="marketplace-search">
+          <div className="marketplace-search" ref={suggestionsRef}>
             <span className="search-icon">🔍</span>
             <input
               type="text"
               placeholder="Search packages..."
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && doSearch()}
+              onKeyDown={(e) => { if (e.key === 'Enter') { setShowSuggestions(false); doSearch(); } }}
+              onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
             />
+
+            {/* Auto-suggestions dropdown */}
+            {showSuggestions && (suggestions.length > 0 || suggestionsLoading) && (
+              <div className="search-suggestions">
+                {suggestionsLoading && <div className="search-suggestion-item loading">Searching...</div>}
+                {suggestions.map((pkg) => (
+                  <Link
+                    key={pkg.id}
+                    href={`/marketplace/${pkg.slug}`}
+                    className="search-suggestion-item"
+                    onClick={() => setShowSuggestions(false)}
+                  >
+                    <span className="suggestion-icon">{pkg.icon || '📦'}</span>
+                    <div className="suggestion-info">
+                      <span className="suggestion-title">{pkg.title}</span>
+                      <span className="suggestion-summary">{pkg.summary}</span>
+                    </div>
+                    <span className="suggestion-version">v{pkg.version}</span>
+                  </Link>
+                ))}
+                {!suggestionsLoading && suggestions.length > 0 && (
+                  <button
+                    className="search-suggestion-item search-suggestion-all"
+                    onClick={() => { setShowSuggestions(false); doSearch(); }}
+                  >
+                    View all results for &ldquo;{search}&rdquo; →
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           <CategoryFilter categories={categories} active={category} onSelect={handleCategoryChange} />
@@ -139,9 +191,9 @@ export default function MarketplaceClient({ initialPackages, initialTotal, categ
               <div className="filter-section">
                 <h3>License</h3>
                 <ul className="filter-list">
-                  <li className={!license ? 'active' : ''} onClick={() => { setLicense(null); setTimeout(doSearch, 50); }}>All Licenses</li>
+                  <li className={!license ? 'active' : ''} onClick={() => { setLicense(null); setTimeout(() => doSearch({ license: '' }), 50); }}>All Licenses</li>
                   {LICENSES.map((l) => (
-                    <li key={l} className={license === l ? 'active' : ''} onClick={() => { setLicense(l); setTimeout(doSearch, 50); }}>
+                    <li key={l} className={license === l ? 'active' : ''} onClick={() => { setLicense(l); setTimeout(() => doSearch({ license: l }), 50); }}>
                       {l}
                     </li>
                   ))}

@@ -26,76 +26,94 @@ class MarketplaceController extends ControllerBase {
      ========================================================================= */
 
   public function listPackages(Request $request): JsonResponse {
-    $query = $this->entityTypeManager()->getStorage('node')->getQuery()
-      ->condition('type', 'marketplace_package')
-      ->condition('status', 1)
-      ->accessCheck(TRUE);
+    try {
+      $query = $this->entityTypeManager()->getStorage('node')->getQuery()
+        ->condition('type', 'marketplace_package')
+        ->condition('status', 1)
+        ->accessCheck(TRUE);
 
-    // --- Filters ---
-    $category = $request->query->get('category');
-    if ($category) {
-      // Find term by name
-      $terms = $this->entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
-        'vid' => 'package_category',
-        'name' => $category,
-      ]);
-      if (!empty($terms)) {
-        $term = reset($terms);
-        $query->condition('field_package_category', $term->id());
+      // --- Filters ---
+      $category = $request->query->get('category');
+      if ($category) {
+        // Find term by name
+        $terms = $this->entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+          'vid' => 'package_category',
+          'name' => $category,
+        ]);
+        if (!empty($terms)) {
+          $term = reset($terms);
+          $query->condition('field_package_category', $term->id());
+        }
       }
+
+      $search = $request->query->get('search');
+      if ($search) {
+        // Use title-only search to avoid crashes if field_summary is not indexed
+        $query->condition('title', '%' . $search . '%', 'LIKE');
+      }
+
+      $license = $request->query->get('license');
+      if ($license) {
+        $query->condition('field_license', $license);
+      }
+
+      // --- Sorting ---
+      $sort = $request->query->get('sort', 'newest');
+      switch ($sort) {
+        case 'downloads':
+          $query->sort('field_downloads', 'DESC');
+          break;
+        case 'stars':
+          $query->sort('field_stars', 'DESC');
+          break;
+        case 'alpha':
+          $query->sort('title', 'ASC');
+          break;
+        case 'newest':
+        default:
+          $query->sort('created', 'DESC');
+          break;
+      }
+
+      // --- Pagination ---
+      $page = max(0, (int) $request->query->get('page', '0'));
+      $countQuery = clone $query;
+      $total = $countQuery->count()->execute();
+
+      $query->range($page * self::PAGE_SIZE, self::PAGE_SIZE);
+      $nids = $query->execute();
+      $nodes = Node::loadMultiple($nids);
+
+      $packages = [];
+      foreach ($nodes as $node) {
+        try {
+          $packages[] = $this->serializePackage($node);
+        } catch (\Exception $e) {
+          // Skip broken nodes
+          \Drupal::logger('ml_marketplace')->warning('Failed to serialize node @nid: @msg', [
+            '@nid' => $node->id(),
+            '@msg' => $e->getMessage(),
+          ]);
+        }
+      }
+
+      return new JsonResponse([
+        'packages' => $packages,
+        'total' => (int) $total,
+        'page' => $page,
+        'pageSize' => self::PAGE_SIZE,
+      ], 200, self::HEADERS);
     }
-
-    $search = $request->query->get('search');
-    if ($search) {
-      $group = $query->orConditionGroup()
-        ->condition('title', '%' . $search . '%', 'LIKE')
-        ->condition('field_summary', '%' . $search . '%', 'LIKE');
-      $query->condition($group);
+    catch (\Exception $e) {
+      \Drupal::logger('ml_marketplace')->error('listPackages failed: @msg', ['@msg' => $e->getMessage()]);
+      return new JsonResponse([
+        'packages' => [],
+        'total' => 0,
+        'page' => 0,
+        'pageSize' => self::PAGE_SIZE,
+        'error' => $e->getMessage(),
+      ], 200, self::HEADERS);
     }
-
-    $license = $request->query->get('license');
-    if ($license) {
-      $query->condition('field_license', $license);
-    }
-
-    // --- Sorting ---
-    $sort = $request->query->get('sort', 'newest');
-    switch ($sort) {
-      case 'downloads':
-        $query->sort('field_downloads', 'DESC');
-        break;
-      case 'stars':
-        $query->sort('field_stars', 'DESC');
-        break;
-      case 'alpha':
-        $query->sort('title', 'ASC');
-        break;
-      case 'newest':
-      default:
-        $query->sort('created', 'DESC');
-        break;
-    }
-
-    // --- Pagination ---
-    $page = max(0, (int) $request->query->get('page', '0'));
-    $countQuery = clone $query;
-    $total = $countQuery->count()->execute();
-
-    $query->range($page * self::PAGE_SIZE, self::PAGE_SIZE);
-    $nids = $query->execute();
-    $nodes = Node::loadMultiple($nids);
-
-    $packages = [];
-    foreach ($nodes as $node) {
-      $packages[] = $this->serializePackage($node);
-    }
-
-    return new JsonResponse([
-      'packages' => $packages,
-      'total' => (int) $total,
-      'page' => $page,
-      'pageSize' => self::PAGE_SIZE,
-    ], 200, self::HEADERS);
   }
 
   /* =========================================================================
