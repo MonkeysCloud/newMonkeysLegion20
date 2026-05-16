@@ -36,7 +36,7 @@ export default function MarketplaceClient({ initialPackages, initialTotal, categ
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
   const suggestionsRef = useRef<HTMLDivElement>(null);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const doSearch = useCallback(async (overrides?: Record<string, string>) => {
     const params: Record<string, string> = {};
