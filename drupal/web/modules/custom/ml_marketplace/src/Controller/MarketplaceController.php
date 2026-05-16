@@ -465,8 +465,8 @@ class MarketplaceController extends ControllerBase {
         }
       }
 
-      // Update screenshots if provided
-      if (isset($body['screenshot_fids']) && is_array($body['screenshot_fids'])) {
+      // Update screenshots if provided (empty array clears the field)
+      if (array_key_exists('screenshot_fids', $body) && is_array($body['screenshot_fids'])) {
         $fidsArr = [];
         foreach ($body['screenshot_fids'] as $fid) {
           $fidsArr[] = ['target_id' => (int) $fid];

@@ -176,9 +176,7 @@ export default function EditPackagePage({ params }: { params: Promise<{ slug: st
       }
       // Always send the full list so Drupal knows the current state
       payload.screenshot_urls = finalScreenshotUrls;
-      if (newScreenshotFids.length > 0) {
-        payload.screenshot_fids = newScreenshotFids;
-      }
+      payload.screenshot_fids = newScreenshotFids;
 
       const res = await fetch(`/api/dashboard/edit/${slug}`, {
         method: 'POST',
