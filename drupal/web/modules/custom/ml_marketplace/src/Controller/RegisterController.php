@@ -294,6 +294,7 @@ class RegisterController extends ControllerBase {
             $logoFile = $node->get('field_logo')->entity;
             if ($logoFile) {
               $url = \Drupal::service('file_url_generator')->generateAbsoluteString($logoFile->getFileUri());
+              $url = preg_replace('#^https?://ml-cms[^/]*\.run\.app#', 'https://cms.monkeyslegion.com', $url);
               $logoUrl = str_replace('http://', 'https://', $url);
             }
           }

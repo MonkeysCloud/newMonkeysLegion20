@@ -20,6 +20,18 @@ class MarketplaceController extends ControllerBase {
 
   private const HEADERS = ['Access-Control-Allow-Origin' => '*'];
   private const PAGE_SIZE = 12;
+  private const PUBLIC_CMS_URL = 'https://cms.monkeyslegion.com';
+
+  /**
+   * Rewrite file URLs: replace internal Cloud Run hostname with public CMS URL.
+   */
+  private static function fixFileUrl(string $url): string {
+    // Replace any internal Cloud Run URL pattern with the public CMS domain
+    $url = preg_replace('#^https?://ml-cms[^/]*\.run\.app#', self::PUBLIC_CMS_URL, $url);
+    // Also fix plain http:// to https://
+    $url = str_replace('http://', 'https://', $url);
+    return $url;
+  }
 
   /* =========================================================================
      Public: List published packages
@@ -735,7 +747,7 @@ class MarketplaceController extends ControllerBase {
         $logoFile = $node->get('field_logo')->entity;
         if ($logoFile) {
           $url = \Drupal::service('file_url_generator')->generateAbsoluteString($logoFile->getFileUri());
-          $data['logoUrl'] = str_replace('http://', 'https://', $url);
+          $data['logoUrl'] = self::fixFileUrl($url);
         }
       }
     } catch (\Exception $e) {}
@@ -751,7 +763,7 @@ class MarketplaceController extends ControllerBase {
           $file = $item->entity;
           if ($file) {
             $url = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
-            $data['images'][] = str_replace('http://', 'https://', $url);
+            $data['images'][] = self::fixFileUrl($url);
           }
         }
       }
