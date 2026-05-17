@@ -25,7 +25,10 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await res.json();
-    return NextResponse.json(data);
+    const response = NextResponse.json(data);
+    // Cache for 30s at CDN, serve stale for 60s while revalidating
+    response.headers.set('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=60');
+    return response;
   } catch {
     return NextResponse.json({ packages: [], total: 0, page: 0, pageSize: 12 }, { status: 500 });
   }

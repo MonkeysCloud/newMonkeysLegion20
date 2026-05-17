@@ -9,7 +9,9 @@ export async function GET() {
       cache: 'no-store',
     });
     if (!res.ok) return NextResponse.json({ categories: [] });
-    return NextResponse.json(await res.json());
+    const response = NextResponse.json(await res.json());
+    response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+    return response;
   } catch {
     return NextResponse.json({ categories: [] });
   }

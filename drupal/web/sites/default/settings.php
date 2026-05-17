@@ -56,7 +56,15 @@ $settings['file_temp_path'] = '/tmp';
 // Performance settings.
 $config['system.performance']['css']['preprocess'] = TRUE;
 $config['system.performance']['js']['preprocess'] = TRUE;
-$config['system.performance']['cache']['page']['max_age'] = 900;
+$config['system.performance']['cache']['page']['max_age'] = 3600; // 1 hour
+
+// Fast 404 — serve lightweight 404 for missing static files without bootstrapping Drupal
+$config['system.performance']['fast_404']['enabled'] = TRUE;
+$config['system.performance']['fast_404']['paths'] = '/\.(?:txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp)$/i';
+$config['system.performance']['fast_404']['html'] = '<!DOCTYPE html><html><head><title>404</title></head><body><h1>Not Found</h1></body></html>';
+
+// Ensure internal page cache and dynamic page cache are active.
+// These are core modules enabled via drush: drush en page_cache dynamic_page_cache -y
 
 // CORS configuration for headless/decoupled usage.
 $settings['cors.config'] = [

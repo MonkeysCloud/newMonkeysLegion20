@@ -69,6 +69,8 @@ sleep 2
 (
     echo "→ Running DB updates..."
     timeout 60s vendor/bin/drush updatedb -y 2>&1 || echo "→ Drush updatedb failed or timed out"
+    echo "→ Enabling cache modules..."
+    timeout 30s vendor/bin/drush en page_cache dynamic_page_cache -y 2>&1 || echo "→ Cache modules already enabled or failed"
     echo "→ Rebuilding cache..."
     timeout 60s vendor/bin/drush cr 2>&1 || echo "→ Drush cr failed or timed out"
     echo "→ Drush tasks complete."
