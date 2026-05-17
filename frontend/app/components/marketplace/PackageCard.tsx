@@ -35,7 +35,16 @@ export default function PackageCard({ pkg }: { pkg: MarketplacePackage }) {
           <span>⭐ {pkg.stars}</span>
         </div>
         <span style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>
-          by {pkg.author.name}
+          by{' '}
+          {pkg.author.profileUrl ? (
+            <span
+              className="pkg-card-author-link"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); window.location.href = pkg.author.profileUrl!; }}
+              style={{ color: 'var(--color-primary-light)', cursor: 'pointer' }}
+            >
+              {pkg.author.name}
+            </span>
+          ) : pkg.author.name}
         </span>
       </div>
     </Link>

@@ -284,6 +284,21 @@ class RegisterController extends ControllerBase {
       foreach ($nodes as $node) {
         $stars = (int) ($node->hasField('field_stars') ? $node->get('field_stars')->value : 0);
         $totalStars += $stars;
+
+        // Resolve logo URL: prefer GCS URL, fall back to file entity
+        $logoUrl = '';
+        try {
+          if ($node->hasField('field_logo_url') && !$node->get('field_logo_url')->isEmpty()) {
+            $logoUrl = $node->get('field_logo_url')->value;
+          } elseif ($node->hasField('field_logo') && !$node->get('field_logo')->isEmpty()) {
+            $logoFile = $node->get('field_logo')->entity;
+            if ($logoFile) {
+              $url = \Drupal::service('file_url_generator')->generateAbsoluteString($logoFile->getFileUri());
+              $logoUrl = str_replace('http://', 'https://', $url);
+            }
+          }
+        } catch (\Exception $e) {}
+
         $packages[] = [
           'id' => $node->id(),
           'title' => $node->getTitle(),
@@ -291,6 +306,7 @@ class RegisterController extends ControllerBase {
           'summary' => $node->hasField('field_summary') ? $node->get('field_summary')->value : '',
           'version' => $node->hasField('field_version') ? $node->get('field_version')->value : '',
           'icon' => $node->hasField('field_icon') ? $node->get('field_icon')->value : '',
+          'logoUrl' => $logoUrl,
           'stars' => $stars,
           'downloads' => (int) ($node->hasField('field_downloads') ? $node->get('field_downloads')->value : 0),
           'created' => date('c', (int) $node->getCreatedTime()),

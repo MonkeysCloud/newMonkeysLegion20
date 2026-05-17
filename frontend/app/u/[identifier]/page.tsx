@@ -200,12 +200,12 @@ export default async function PublicProfilePage({ params }: Props) {
                 gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
                 gap: 'var(--space-4)',
               }}>
-                {packages.map((pkg: { id: string; title: string; slug: string; summary: string; version: string; icon: string; stars: number; downloads: number }) => (
+                {packages.map((pkg: { id: string; title: string; slug: string; summary: string; version: string; icon: string; logoUrl?: string; stars: number; downloads: number }) => (
                   <Link key={pkg.id} href={`/marketplace/${pkg.slug}`} style={{ textDecoration: 'none' }}>
                     <div className="profile-package-card">
                       <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
-                        {pkg.icon ? (
-                          <img src={pkg.icon} alt="" style={{ width: 40, height: 40, borderRadius: 10 }} />
+                        {pkg.logoUrl ? (
+                          <img src={pkg.logoUrl} alt="" style={{ width: 40, height: 40, borderRadius: 10, objectFit: 'cover' }} />
                         ) : (
                           <div style={{
                             width: 40, height: 40, borderRadius: 10,
@@ -213,7 +213,7 @@ export default async function PublicProfilePage({ params }: Props) {
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             fontSize: 'var(--text-lg)', fontWeight: 700, color: 'white',
                           }}>
-                            {pkg.title.charAt(0)}
+                            {pkg.icon || pkg.title.charAt(0)}
                           </div>
                         )}
                         <div>

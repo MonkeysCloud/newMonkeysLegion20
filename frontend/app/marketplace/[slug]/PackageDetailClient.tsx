@@ -88,7 +88,10 @@ export default function PackageDetailClient({ pkg }: { pkg: MarketplacePackage }
             {pkg.category && <span className="pkg-card-category">{pkg.category.name}</span>}
           </div>
           <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--text-base)' }}>
-            by <Link href={`/profile/${pkg.author.name}`} style={{ color: 'var(--color-primary-light)' }}>{pkg.author.name}</Link>
+            by{' '}
+            <Link href={pkg.author.profileUrl || `/u/${pkg.author.uid}`} style={{ color: 'var(--color-primary-light)' }}>
+              {pkg.author.name}
+            </Link>
           </p>
         </div>
         <button className={`star-btn${starred ? ' starred' : ''}`} onClick={handleStar} disabled={starLoading || !isAuthenticated}>

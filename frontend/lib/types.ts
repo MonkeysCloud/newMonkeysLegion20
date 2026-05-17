@@ -174,6 +174,7 @@ export interface MarketplacePackage {
   author: {
     name: string;
     uid: number;
+    profileUrl?: string;
   };
   status?: 'published' | 'draft';
   related?: MarketplacePackage[];

@@ -708,8 +708,9 @@ class MarketplaceController extends ControllerBase {
       'downloads' => (int) ($node->get('field_downloads')->value ?? 0),
       'stars' => (int) ($node->get('field_stars')->value ?? 0),
       'author' => [
-        'name' => $author ? $author->getAccountName() : 'Unknown',
+        'name' => $author ? ($author->hasField('field_display_name') && !$author->get('field_display_name')->isEmpty() ? $author->get('field_display_name')->value : $author->getAccountName()) : 'Unknown',
         'uid' => $author ? (int) $author->id() : 0,
+        'profileUrl' => $author ? ($author->hasField('field_username_slug') && !$author->get('field_username_slug')->isEmpty() ? '/u/' . $author->get('field_username_slug')->value : '/u/' . $author->uuid()) : '',
       ],
       'created' => date('c', (int) $node->getCreatedTime()),
       'changed' => date('c', (int) $node->getChangedTime()),
