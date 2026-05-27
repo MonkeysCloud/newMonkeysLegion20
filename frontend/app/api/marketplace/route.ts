@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!res.ok) {
-      return NextResponse.json({ packages: [], total: 0, page: 0, pageSize: 12 }, { status: res.status });
+      return NextResponse.json({ packages: [], total: 0, page: 0, pageSize: 24 }, { status: res.status });
     }
 
     const data = await res.json();
@@ -30,6 +30,6 @@ export async function GET(request: NextRequest) {
     response.headers.set('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=60');
     return response;
   } catch {
-    return NextResponse.json({ packages: [], total: 0, page: 0, pageSize: 12 }, { status: 500 });
+    return NextResponse.json({ packages: [], total: 0, page: 0, pageSize: 24 }, { status: 500 });
   }
 }

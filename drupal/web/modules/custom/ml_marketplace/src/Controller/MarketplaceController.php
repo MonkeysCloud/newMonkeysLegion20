@@ -89,10 +89,11 @@ class MarketplaceController extends ControllerBase {
 
       // --- Pagination ---
       $page = max(0, (int) $request->query->get('page', '0'));
+      $pageSize = min(48, max(1, (int) $request->query->get('pageSize', '24')));
       $countQuery = clone $query;
       $total = $countQuery->count()->execute();
 
-      $query->range($page * self::PAGE_SIZE, self::PAGE_SIZE);
+      $query->range($page * $pageSize, $pageSize);
       $nids = $query->execute();
       $nodes = Node::loadMultiple($nids);
 
@@ -113,7 +114,7 @@ class MarketplaceController extends ControllerBase {
         'packages' => $packages,
         'total' => (int) $total,
         'page' => $page,
-        'pageSize' => self::PAGE_SIZE,
+        'pageSize' => $pageSize,
       ], 200, self::HEADERS);
     }
     catch (\Exception $e) {

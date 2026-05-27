@@ -21,6 +21,8 @@ const SORT_OPTIONS = [
 
 const LICENSES = ['MIT', 'Apache-2.0', 'GPL-3.0', 'BSD-3', 'ISC'];
 
+const PAGE_SIZE = 24;
+
 export default function MarketplaceClient({ initialPackages, initialTotal, categories }: Props) {
   const [packages, setPackages] = useState(initialPackages);
   const [total, setTotal] = useState(initialTotal);
@@ -46,6 +48,7 @@ export default function MarketplaceClient({ initialPackages, initialTotal, categ
     if (overrides?.license ?? license) params.license = (overrides?.license ?? license)!;
     params.sort = overrides?.sort ?? sort;
     params.page = overrides?.page ?? String(page);
+    params.pageSize = String(PAGE_SIZE);
 
     setLoading(true);
     try {
@@ -105,16 +108,37 @@ export default function MarketplaceClient({ initialPackages, initialTotal, categ
   const handleCategoryChange = (cat: string | null) => {
     setCategory(cat);
     setPage(0);
-    setTimeout(() => doSearch({ category: cat || '' }), 50);
+    setTimeout(() => doSearch({ category: cat || '', page: '0' }), 50);
   };
 
   const handleSortChange = (s: string) => {
     setSort(s);
     setPage(0);
-    setTimeout(() => doSearch({ sort: s }), 50);
+    setTimeout(() => doSearch({ sort: s, page: '0' }), 50);
   };
 
-  const totalPages = Math.ceil(total / 12);
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    setTimeout(() => doSearch({ page: String(newPage) }), 50);
+  };
+
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+
+  // Build a sliding window of page buttons around the current page
+  const getPageNumbers = (): number[] => {
+    const maxVisible = 7;
+    if (totalPages <= maxVisible) {
+      return Array.from({ length: totalPages }, (_, i) => i);
+    }
+    const half = Math.floor(maxVisible / 2);
+    let start = Math.max(0, page - half);
+    let end = start + maxVisible - 1;
+    if (end >= totalPages) {
+      end = totalPages - 1;
+      start = Math.max(0, end - maxVisible + 1);
+    }
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
 
   return (
     <main>
@@ -132,7 +156,7 @@ export default function MarketplaceClient({ initialPackages, initialTotal, categ
               placeholder="Search packages..."
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter') { setShowSuggestions(false); doSearch(); } }}
+              onKeyDown={(e) => { if (e.key === 'Enter') { setShowSuggestions(false); doSearch({ page: '0' }); } }}
               onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
             />
 
@@ -158,7 +182,7 @@ export default function MarketplaceClient({ initialPackages, initialTotal, categ
                 {!suggestionsLoading && suggestions.length > 0 && (
                   <button
                     className="search-suggestion-item search-suggestion-all"
-                    onClick={() => { setShowSuggestions(false); doSearch(); }}
+                    onClick={() => { setShowSuggestions(false); doSearch({ page: '0' }); }}
                   >
                     View all results for &ldquo;{search}&rdquo; →
                   </button>
@@ -191,9 +215,9 @@ export default function MarketplaceClient({ initialPackages, initialTotal, categ
               <div className="filter-section">
                 <h3>License</h3>
                 <ul className="filter-list">
-                  <li className={!license ? 'active' : ''} onClick={() => { setLicense(null); setTimeout(() => doSearch({ license: '' }), 50); }}>All Licenses</li>
+                  <li className={!license ? 'active' : ''} onClick={() => { setLicense(null); setTimeout(() => doSearch({ license: '', page: '0' }), 50); }}>All Licenses</li>
                   {LICENSES.map((l) => (
-                    <li key={l} className={license === l ? 'active' : ''} onClick={() => { setLicense(l); setTimeout(() => doSearch({ license: l }), 50); }}>
+                    <li key={l} className={license === l ? 'active' : ''} onClick={() => { setLicense(l); setPage(0); setTimeout(() => doSearch({ license: l, page: '0' }), 50); }}>
                       {l}
                     </li>
                   ))}
@@ -238,13 +262,27 @@ export default function MarketplaceClient({ initialPackages, initialTotal, categ
 
               {totalPages > 1 && (
                 <div className="pagination">
-                  <button disabled={page === 0} onClick={() => { setPage(page - 1); setTimeout(doSearch, 50); }}>← Prev</button>
-                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => (
-                    <button key={i} className={page === i ? 'active' : ''} onClick={() => { setPage(i); setTimeout(doSearch, 50); }}>
+                  <button disabled={page === 0} onClick={() => handlePageChange(page - 1)}>← Prev</button>
+                  {getPageNumbers()[0] > 0 && (
+                    <>
+                      <button className={page === 0 ? 'active' : ''} onClick={() => handlePageChange(0)}>1</button>
+                      {getPageNumbers()[0] > 1 && <span className="pagination-ellipsis">…</span>}
+                    </>
+                  )}
+                  {getPageNumbers().map((i) => (
+                    <button key={i} className={page === i ? 'active' : ''} onClick={() => handlePageChange(i)}>
                       {i + 1}
                     </button>
                   ))}
-                  <button disabled={page >= totalPages - 1} onClick={() => { setPage(page + 1); setTimeout(doSearch, 50); }}>Next →</button>
+                  {getPageNumbers()[getPageNumbers().length - 1] < totalPages - 1 && (
+                    <>
+                      {getPageNumbers()[getPageNumbers().length - 1] < totalPages - 2 && <span className="pagination-ellipsis">…</span>}
+                      <button className={page === totalPages - 1 ? 'active' : ''} onClick={() => handlePageChange(totalPages - 1)}>
+                        {totalPages}
+                      </button>
+                    </>
+                  )}
+                  <button disabled={page >= totalPages - 1} onClick={() => handlePageChange(page + 1)}>Next →</button>
                 </div>
               )}
             </div>

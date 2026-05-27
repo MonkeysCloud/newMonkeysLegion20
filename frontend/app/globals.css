@@ -970,6 +970,7 @@ img {
 .pagination button:hover { border-color: var(--color-primary); color: var(--color-primary-light); }
 .pagination button.active { background: var(--color-primary); border-color: var(--color-primary); color: white; }
 .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+.pagination-ellipsis { display: flex; align-items: center; padding: 0 var(--space-1); color: var(--color-text-muted); font-size: var(--text-sm); user-select: none; }
 
 /* Empty state */
 .empty-state { text-align: center; padding: var(--space-16) 0; }

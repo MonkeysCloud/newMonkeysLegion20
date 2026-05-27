@@ -1063,6 +1063,7 @@ export async function getMarketplacePackages(
   if (filters.license) params.set('license', filters.license);
   if (filters.sort) params.set('sort', filters.sort);
   if (filters.page !== undefined) params.set('page', String(filters.page));
+  params.set('pageSize', '24');
 
   try {
     const url = `${DRUPAL_BASE_URL}/api/marketplace/packages?${params.toString()}`;
@@ -1070,10 +1071,10 @@ export async function getMarketplacePackages(
       headers: { Accept: 'application/json' },
       cache: 'no-store',
     });
-    if (!res.ok) return { packages: [], total: 0, page: 0, pageSize: 12 };
+    if (!res.ok) return { packages: [], total: 0, page: 0, pageSize: 24 };
     return res.json();
   } catch {
-    return { packages: [], total: 0, page: 0, pageSize: 12 };
+    return { packages: [], total: 0, page: 0, pageSize: 24 };
   }
 }
 
